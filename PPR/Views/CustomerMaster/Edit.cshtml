@@ -1,0 +1,11 @@
+﻿@using PPRModel.Model
+@model CustomerMasterModel
+@{
+    ViewBag.Title = "Edit";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+    @using (Html.BeginForm("Edit", "CustomerMaster", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        Html.RenderPartial("CreateOrEdit");
+    }
+

@@ -1,0 +1,69 @@
+<div id="tblPartial"><div class="card" id="tblDiv">
+    <div class="card-header">
+        <img style="width:8%" src="/Images/karamlogo.png">
+        <h3 class="card-title">
+            <b>
+                LABEL PRINTING REGISTER<br>
+                P.N. INTERNATIONAL
+            </b>
+        </h3>
+        <div class="text-center mt-4">
+            <a href="javascript:void(0);" class="btn btn-green w-100" onclick="return exportToExcel('tblPartial', 'user-data');">Export To Excel</a>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table card-table table-vcenter text-nowrap datatable" id="myTable">
+            <thead>
+                <tr>
+                    
+                    <th style="border:1px solid black" class="w-1">
+                        SALE ORDER
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-sm icon-thick" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M6 15l6 -6l6 6"></path></svg>
+                    </th>
+                    <th style="border:1px solid black">TENTATIVE DATE</th>
+                    <th style="border:1px solid black">PROMISE DATE</th>
+                    <th style="border:1px solid black">JOB</th>
+                    <th style="border:1px solid black">INTERNAL ITEM</th>
+                    <th style="border:1px solid black">QUANTITY</th>
+                    <th style="border:1px solid black">CUSTOMER NAME</th>
+                    <th style="border:1px solid black">
+                        LABEL PRINTING DATE
+                    </th>
+                    <th style="border:1px solid black">
+                        LABEL RECEIVING DATE
+                    </th>
+                    <th style="border:1px solid black">
+                        REMARKS
+                    </th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                        <tr>
+                            
+                            <td style="border:1px solid black"><span class="text-muted">211145989</span></td>
+                            <td style="border:1px solid black">
+                                24-02-2022 00:00:00
+                            </td>
+                            <td style="border:1px solid black">
+                                16-03-2022 00:00:00
+                            </td>
+                            <td style="border:1px solid black">001241818</td>
+                            <td style="border:1px solid black">
+                                100307700069
+                            </td>
+                            <td style="border:1px solid black">250</td>
+                            <td style="border:1px solid black">IRUDEK 2000 S.L.</td>
+                            <td style="border:1px solid black"></td>
+                            <td style="border:1px solid black"></td>
+                            <td style="border:1px solid black"></td>
+                            
+                        </tr>
+
+            </tbody>
+        </table>
+
+    </div>
+</div>
+</div>

@@ -1,0 +1,677 @@
+﻿@using PPRModel.Model
+@model DevelopmentSheetModel
+@*@{
+        //ViewBag.Title = "AddDevelopmentSheetImprovisation";
+        Layout = null;
+    }*@
+<style>
+    .form-horizontal .controls {
+        margin-left: 544px;
+        padding: 10px 0;
+    }
+
+    .form-horizontal .control-label {
+        padding-top: 15px;
+        width: auto;
+        padding-left: 30px;
+    }
+
+    .control-label {
+        font-weight: bold
+    }
+
+    .rowwidth {
+        width: 90px;
+    }
+
+    .tblrespoonsive {
+        overflow-x: auto;
+    }
+
+    .table th, .table td {
+        padding: 5px;
+    }
+    .listtbl td { 
+        border-top: none;
+    }
+</style>
+<div class="row-fluid">
+    <div class="span12">
+
+
+        @using (Html.BeginForm("AddDevelopmentSheetImprovisation", "ProductProjectReport", FormMethod.Post, new { id = "form_validation", @class = "form-horizontal" }))
+        {
+            <div class="widget-box">
+                <div class="widget-content nopadding">
+                    <div class="control-group">
+                        <label class="control-label">New Product Description :</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.NewProductDescription, new { @Class = "from-control span11", @Disabled = "Disabled" })
+                            @Html.HiddenFor(m => m.ProjectID, new { @Class = "from-control span11" })
+                            @Html.HiddenFor(m => m.PlanID, new { @Class = "from-control span11" })
+                            @Html.HiddenFor(m => m.ActivityID, new { @Class = "from-control span11" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Ref No :</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.RefNo, new { @Class = "from-control span11", @Disabled = "Disabled" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">PPR No : </label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.PPRNo, new { @Class = "from-control span11", @Disabled = "Disabled" })
+                        </div>
+                    </div>
+
+                </div>
+            </div><br />
+            <h4 style="margin-left:41%;">Details Of Components</h4><br />
+            <table class="table listtbl"> 
+                <tfoot> 
+                    <tr> 
+                        <td>
+                            <label style="font-weight:bold">Status of current actions under plan.</label>
+                            <select id="txtStatusofcurrentactionsunderplan" class="span12">
+                                @foreach (SelectListItem option in Model._underplanList)
+                                {
+                                    <option value="@option.Value">@option.Text</option>
+                                }
+                            </select>
+                        </td>
+                        <td>
+                            <label style="font-weight:bold">Customer</label>
+                            <select id="txtCustomer" class="span12">
+                                @foreach (SelectListItem option1 in Model._CustomerList)
+                                {
+                                    <option value="@option1.Value">@option1.Text</option>
+                                }
+                            </select>
+                        </td>
+                        <td>
+                            <label style="font-weight:bold">Resp</label>
+                            <select id="txtResp" class="span12">
+                                @foreach (SelectListItem option2 in Model._RespList)
+                                {
+                                    <option value="@option2.Value">@option2.Text</option>
+                                }
+                            </select>
+                        </td>
+                        <td>
+                            <label style="font-weight:bold">Target Date</label>
+                            <input type="date" id="txtTargetDate" class="from-control span12" />
+                        </td>
+                        <td>
+                            <label style="font-weight:bold">Revised Date</label>
+                            <input type="date" id="txtRevisedDate" class="from-control span12" />
+                        </td>
+                        <td>
+                            <label style="font-weight:bold">Completion Date</label>
+                            <input type="date" id="txtCompletionDate" class="from-control span12" />
+                        </td>
+
+
+                    </tr>
+                    <tr></tr>
+                    <tr>
+                        <td>
+                            <br/>
+                            <label style="font-weight:bold">Certification Status</label>
+                            <select id="ddlCertificationStatus" class="from-control span12">
+                                @foreach (SelectListItem option1 in Model._CertificationStatusList)
+                                {
+                                    <option value="@option1.Value">@option1.Text</option>
+                                }
+                            </select>
+                        </td>
+                        <td>
+                            <label style="font-weight:bold">Sample to be sent for trial <br />(KRATOS & Gary)</label>
+                            <select id="ddlSampletobesentfortrial" class="from-control span12">
+                                @foreach (SelectListItem option2 in Model._SampletobesentfortrialList)
+                                {
+                                    <option value="@option2.Value">@option2.Text</option>
+                                }
+                            </select>
+                        </td>
+                        <td>
+                            <label style="font-weight:bold">Item creation,<br /> BOM & Routing</label>
+                            <select id="ddlItemcreationBOMRouting" class="from-control span11">
+                                @foreach (SelectListItem option3 in Model._ItemcreationBOMRoutingList)
+                                {
+                                    <option value="@option3.Value">@option3.Text</option>
+                                }
+                            </select>
+                        </td>
+                        <td>
+                            <br />
+                            <label style="font-weight:bold">Translation Status</label>
+                            <select id="ddlTranslationStatus" class="from-control span12">
+                                @foreach (SelectListItem option4 in Model._TranslationStatusList)
+                                {
+                                    <option value="@option4.Value">@option4.Text</option>
+                                }
+                            </select>
+                        </td>
+                        <td>
+                            <br />
+                            <label style="font-weight:bold">REMARK</label>
+                            <input type="text" id="txtRemarks" class="required from-control span12" />
+                        </td>
+                        <td>
+
+                            <label style="font-weight:bold">Mark As <br />Complete</label>
+                            <input type="checkbox" id="txtMarkAsComplete" class="required from-control span4" onclick="GetMarkasComplete(this)" />
+                            <a href="javascript:void(0);" class="btn btn-primary" id="addnewrow" title="Add"><span>Add</span></a>
+                        </td>
+                        @*<td>
+                <a href="javascript:void(0);" class="btn btn-primary" id="addnewrow" title="Add"><span>Add</span></a>
+            </td>*@
+                    </tr>
+
+                </tfoot>
+            </table>
+            <br />
+            <br />
+            <div class="widget-box">
+                <div class="widget-content nopadding">
+                    <div class="widget-content nopadding tblrespoonsive">
+
+                        <table class="table table-bordered table-striped" id="tblParticipantList">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Status of current actions under plan.</th>
+                                    <th>Customer</th>
+                                    <th>Resp</th>
+                                    <th>Target Date</th>
+                                    <th>Revised Date </th>
+                                    <th>Completion Date </th>
+                                    <th>Certification Status</th>
+                                    <th>Sample to be sent for trial (KRATOS & Gary)</th>
+                                    <th>Item creation, BOM & Routing</th>
+                                    <th>Translation Status</th>
+                                    <th> REMARK</th>
+                                    <th> Mark As Complete</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model._developmentSheetComponent != null)
+                                {
+                                    for (int i = 0; i < Model._developmentSheetComponent.Count; i++)
+                                    {
+                                        <tr>
+                                            <td><a href="javascript:void(0);" class="btn btn-danger" id="delete-row" title="Delete" onclick='Remove(this)'><span class='fa fa-minus'></span></a></td>
+                                            <td>
+                                                <div>
+                                                    <select id="Statusofcurrentactionsunderplan" class="req1" style="width:85px" onchange="GetPlan(this)">
+                                                        @foreach (SelectListItem option in Model._underplanList)
+                                                        {
+                                                            <option value="@option.Value" @(option.Value == Model._developmentSheetComponent[i].Statusofcurrentactionsunderplan ? "selected='selected'" : "")>@option.Text</option>
+                                                        }
+                                                    </select>
+                                                    @Html.HiddenFor(m => m._developmentSheetComponent[i].Statusofcurrentactionsunderplan, new { @class = "HdnPlan1" })
+
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <select id="Customer" class="req2" name="Customer" style="width:85px" onchange="GetCust(this)">
+                                                        @foreach (SelectListItem option in Model._CustomerList)
+                                                        {
+                                                            <option value="@option.Value" @(option.Value == Model._developmentSheetComponent[i].Customer ? "selected='selected'" : "")>@option.Text</option>
+                                                        }
+                                                    </select>
+                                                    @Html.HiddenFor(m => m._developmentSheetComponent[i].Customer, new { @class = "HdnPlan2" })
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <select id="Resp" name="Resp" class="req3" style="width:85px" onchange="GetResp(this)">
+                                                        @foreach (SelectListItem option in Model._RespList)
+                                                        {
+                                                            <option value="@option.Value" @(option.Value == Model._developmentSheetComponent[i].Resp ? "selected='selected'" : "")>@option.Text</option>
+                                                        }
+                                                    </select>
+                                                    @Html.HiddenFor(m => m._developmentSheetComponent[i].Resp, new { @Class = "HdnPlan3" })
+                                                </div>
+                                            </td>
+                                            <td>
+
+                                                @Html.TextBoxFor(m => m._developmentSheetComponent[i].TargetDate, new { @class = "req4 rowwidth from-control span11", @Placeholder = "Target Date", @id = "targetdate", @type = "Date" })
+                                            </td>
+                                            <td>
+                                                @Html.TextBoxFor(m => m._developmentSheetComponent[i].RevisedDate, new { @class = "req5 rowwidth from-control span11", @Placeholder = "Revised Date", @id = "RevisedDate", @type = "Date" })
+                                            </td>
+                                            <td>
+                                                @Html.TextBoxFor(m => m._developmentSheetComponent[i].CompletionDate, new { @class = "req6 rowwidth from-control span11", @Placeholder = "Completion Date", @id = "CompletionDate", @type = "Date" })
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <select id="CertificationStatus" class="req7" name="CertificationStatus" style="width:85px" onchange="GetCerti(this)">
+                                                        @foreach (SelectListItem option in Model._developmentSheetComponent[i]._CertificationStatusList)
+                                                        {
+                                                            <option value="@option.Value" @(option.Value == Model._developmentSheetComponent[i].CertificationStatus ? "selected='selected'" : "")>@option.Text</option>
+                                                        }
+                                                    </select>
+                                                    @Html.HiddenFor(m => m._developmentSheetComponent[i].CertificationStatus, new { @class = "HdnPlan4" })
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <select id="Sampletobesentfortrial" class="req8" name="Sampletobesentfortrial" style="width:85px" onchange="GetTrial(this)">
+                                                        @foreach (SelectListItem option in Model._developmentSheetComponent[i]._SampletobesentfortrialList)
+                                                        {
+                                                            <option value="@option.Value" @(option.Value == Model._developmentSheetComponent[i].Sampletobesentfortrial ? "selected='selected'" : "")>@option.Text</option>
+                                                        }
+                                                    </select>
+                                                    @Html.HiddenFor(m => m._developmentSheetComponent[i].Sampletobesentfortrial, new { @class = "HdnPlan5" })
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <select id="ItemcreationBOMRouting" name="ItemcreationBOMRouting" style="width:85px" class="req9" onchange="GetRout(this)">
+                                                        @foreach (SelectListItem option in Model._developmentSheetComponent[i]._ItemcreationBOMRoutingList)
+                                                        {
+                                                            <option value="@option.Value" @(option.Value == Model._developmentSheetComponent[i].ItemcreationBOMRouting ? "selected='selected'" : "")>@option.Text</option>
+                                                        }
+                                                    </select>
+                                                    @Html.HiddenFor(m => m._developmentSheetComponent[i].ItemcreationBOMRouting, new { @class = "HdnPlan6" })
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <select id="TranslationStatus" class="req10" name="TranslationStatus" style="width:85px" onchange="GetTSt(this)">
+                                                        @foreach (SelectListItem option in Model._developmentSheetComponent[i]._TranslationStatusList)
+                                                        {
+                                                            <option value="@option.Value" @(option.Value == Model._developmentSheetComponent[i].TranslationStatus ? "selected='selected'" : "")>@option.Text</option>
+                                                        }
+                                                    </select>
+                                                    @Html.HiddenFor(m => m._developmentSheetComponent[i].TranslationStatus, new { @class = "HdnPlan7" })
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    @Html.TextBoxFor(m => m._developmentSheetComponent[i].Remarks, new { @Class = "from-control span11 req11" })
+                                                </div>
+                                            </td>
+                                            <td>
+                                                @*<div class="controls">*@
+                                                @Html.CheckBoxFor(m => m._developmentSheetComponent[i].MarkAsComplete, new { @Class = "from-control span11 req12", @Id = "MarkAsComplete", @onclick = "GetMarkasComplete(this)" })
+                                                @Html.HiddenFor(m => m._developmentSheetComponent[i].MarkAsComplete, new { @class = "HdnPlan8" })
+                                                @*</div>*@
+                                            </td>
+
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+
+                        </table>
+                    </div>
+                    @if (Model.Status != "3")
+                    {
+                    <div class="form-actions" style="text-align: center;padding-left:0px">
+                        <a href="~/DesignDevelopmetPlan/DevelopmentPlan?ProjectID=@Model.ProjectID" type="button" class="btn btn-danger">Cancel</a>
+                        <button type="submit" id="btnSave" class="btn btn-success">Save & Update</button>
+                    </div>
+                    }
+                </div>
+            </div>
+        }
+
+
+    </div>
+</div>
+<script type="text/javascript">
+    $("#addnewrow").on("click", function () {
+        var txtStatusofcurrentactionsunderplan = $("#txtStatusofcurrentactionsunderplan option:selected");
+        var txtCustomer = $("#txtCustomer option:selected");
+        var txtResp = $("#txtResp option:selected");
+        var txtTargetDate = $("#txtTargetDate");
+        var txtRevisedDate = $("#txtRevisedDate");
+        var txtCompletionDate = $("#txtCompletionDate");
+        var ddlCertificationStatus = $("#ddlCertificationStatus option:selected");
+        var ddlSampletobesentfortrial = $("#ddlSampletobesentfortrial option:selected");
+        var ddlItemcreationBOMRouting = $("#ddlItemcreationBOMRouting option:selected");
+        var ddlTranslationStatus = $("#ddlTranslationStatus option:selected");
+        var txtRemarks = $("#txtRemarks");
+        var MarkAsComplete = $("#txtMarkAsComplete");
+        var rowcount = $("#tblParticipantList > tbody > tr").length;
+        var name1 = "_developmentSheetComponent[" + rowcount + "].Statusofcurrentactionsunderplan";
+        var name2 = "_developmentSheetComponent[" + rowcount + "].Customer";
+        var name3 = "_developmentSheetComponent[" + rowcount + "].Resp";
+        var name4 = "_developmentSheetComponent[" + rowcount + "].TargetDate";
+        var name5 = "_developmentSheetComponent[" + rowcount + "].RevisedDate";
+        var name12 = "_developmentSheetComponent[" + rowcount + "].CompletionDate";
+        var name6 = "_developmentSheetComponent[" + rowcount + "].CertificationStatus";
+        var name7 = "_developmentSheetComponent[" + rowcount + "].Sampletobesentfortrial";
+        var name8 = "_developmentSheetComponent[" + rowcount + "].ItemcreationBOMRouting";
+        var name9 = "_developmentSheetComponent[" + rowcount + "].TranslationStatus";
+        var name10 = "_developmentSheetComponent[" + rowcount + "].Remarks";
+        var name11 = "_developmentSheetComponent[" + rowcount + "].MarkAsComplete";
+
+        var PlanHtml = "";
+        $('#txtStatusofcurrentactionsunderplan option').each(function () {
+
+            if ($("#txtStatusofcurrentactionsunderplan option:selected").val() == $(this).val()) {
+                PlanHtml += "<option value=" + $(this).val() + " name=" + name1 + " selected>" + $(this).text() + "</option>";
+            } else {
+                PlanHtml += "<option value=" + $(this).val() + " name=" + name1 + ">" + $(this).text() + "</option>";
+            }
+        });
+
+        var CustomerHtml = "";
+        $('#txtCustomer option').each(function () {
+            if ($("#txtCustomer option:selected").val() == $(this).val()) {
+                CustomerHtml += "<option value=" + $(this).val() + " name=" + name2 + " selected>" + $(this).text() + "</option>";
+            } else {
+                CustomerHtml += "<option value=" + $(this).val() + " name=" + name2 + ">" + $(this).text() + "</option>";
+            }
+        });
+
+        var RespHtml = "";
+        $('#txtResp option').each(function () {
+            if ($("#txtResp option:selected").val() == $(this).val()) {
+                RespHtml += "<option value=" + $(this).val() + " name=" + name3 + " selected>" + $(this).text() + "</option>";
+            } else {
+                RespHtml += "<option value=" + $(this).val() + " name=" + name3 + ">" + $(this).text() + "</option>";
+            }
+        });
+
+        var CertificationStatusHtml = "";
+        $('#ddlCertificationStatus option').each(function () {
+            if ($("#ddlCertificationStatus option:selected").val() == $(this).val()) {
+                CertificationStatusHtml += "<option value=" + $(this).val() + " name=" + name6 + " selected>" + $(this).text() + "</option>";
+            } else {
+                CertificationStatusHtml += "<option value=" + $(this).val() + " name=" + name6 + ">" + $(this).text() + "</option>";
+            }
+        });
+
+        var trialHtml = "";
+        $('#ddlSampletobesentfortrial option').each(function () {
+            if ($("#ddlSampletobesentfortrial option:selected").val() == $(this).val()) {
+                trialHtml += "<option value=" + $(this).val() + " name=" + name7 + " selected>" + $(this).text() + "</option>";
+            } else {
+                trialHtml += "<option value=" + $(this).val() + " name=" + name7 + ">" + $(this).text() + "</option>";
+            }
+        });
+
+        var RoutingHtml = "";
+        $('#ddlItemcreationBOMRouting option').each(function () {
+            if ($("#ddlItemcreationBOMRouting option:selected").val() == $(this).val()) {
+                RoutingHtml += "<option value=" + $(this).val() + " name=" + name8 + " selected>" + $(this).text() + "</option>";
+            } else {
+                RoutingHtml += "<option value=" + $(this).val() + " name=" + name8 + ">" + $(this).text() + "</option>";
+            }
+        });
+
+        var TranslationStatusHtml = "";
+        $('#ddlTranslationStatus option').each(function () {
+            if ($("#ddlTranslationStatus option:selected").val() == $(this).val()) {
+                TranslationStatusHtml += "<option value=" + $(this).val() + " name=" + name9 + " selected>" + $(this).text() + "</option>";
+            } else {
+                TranslationStatusHtml += "<option value=" + $(this).val() + " name=" + name9 + ">" + $(this).text() + "</option>";
+            }
+        });
+        var checkbox = "";
+        var checkboxval = "";
+        //if (MarkAsComplete.val() == "on") {
+        //    checkbox += 'checked';
+        //}
+        if ($('#txtMarkAsComplete').is(":checked")) {
+
+            checkbox += 'checked';
+            checkboxval += 'true';
+        }
+        var textbox = "<tr><td><a href = 'javascript: void(0);' class='btn btn-danger'  title = 'Remove' onclick='Remove(this);'> <span class='fa fa-minus'></span></a ></td >"
+            + "<td style=display:none><input type='hidden' class='from-control span11 txtplan' value='" + txtStatusofcurrentactionsunderplan.val() + "' name='" + name1 + "' ></td >"
+            + "<td> <select class='from-control span11 req1' id='ddlplanhtml' onchange='GetPlan1(this)'>" + PlanHtml + "</select></td >"
+            + "<td style=display:none><input type='hidden' class='from-control span11 txtcus' value='" + txtCustomer.val() + "' name='" + name2 + "' ></td >"
+            + "<td><select id='ddlCusthtml' class='from-control span11 req2' onchange='GetCust1(this)'>" + CustomerHtml + "</select></td >"
+            + "<td style=display:none><input type='hidden' class='from-control span11 txtResphtml' value='" + txtResp.val() + "' name='" + name3 + "'></td >"
+            + "<td><select id='ddlResphtml' class='from-control span11 req3' onchange='GetResp1(this)'>" + RespHtml + "</select></td >"
+            + "<td style=display:none><input type='hidden' class='from-control span11' value='" + txtStatusofcurrentactionsunderplan.val() + "' name='" + name1 + "'></td >"
+            + "<td><input type='Date' class='from-control span11' value='" + txtTargetDate.val() + "' name='" + name4 + "'></td >"
+            + "<td><input type='Date' class='from-control span11' value='" + txtRevisedDate.val() + "' name='" + name5 + "'></td >"
+            + "<td><input type='Date' class='from-control span11' value='" + txtCompletionDate.val() + "' name='" + name12 + "'></td >"
+            + "<td><div><select id='ddlCertihtml' class='from-control span11 req7' onchange='GetCerti1(this)' >" + CertificationStatusHtml
+            + "</select ></div></td >"
+            + "<td style=display:none><input type='hidden' class='from-control span11 txtcerti' value='" + ddlCertificationStatus.val() + "' name='" + name6 + "'></td >"
+            + "<td><select id='ddlTrialhtml' class='from-control span11 req8' onchange='GetTrial1(this)'>" + trialHtml
+            + "</select ></td >"
+            + "<td style=display:none><input type='hidden' class='from-control span11 txtsample' value='" + ddlSampletobesentfortrial.val() + "' name='" + name7 + "'></td >"
+            + "<td><select id='ddlRouthtml' class='from-control span11 req9' onchange='GetRout1(this)'>" + RoutingHtml
+            + "</select ></td >"
+            + "<td style=display:none><input type='hidden' class='from-control span11 txtitemroute' value='" + ddlItemcreationBOMRouting.val() + "' name='" + name8 + "'></td >"
+            + "<td><select id='ddlGetTSthtml' class='from-control span11 req10' onchange='GetTSt1(this)'>" + TranslationStatusHtml
+            + "</select></td >"
+            + "<td style=display:none><input type='hidden' class='from-control span11 txttranslations' value='" + ddlTranslationStatus.val() + "' name='" + name9 + "'></td >"
+            + "<td><input type='text' class='from-control span11 req11' value='" + txtRemarks.val() + "' name='" + name10 + "'></td >"
+            + "<td><input type='checkbox' id='MarkAsComplete' onclick='GetMarkasComplete(this)' class='from-control span11 req12' " + checkbox + "  value='" + checkboxval + "'  name='" + name11 + "'></td >"
+            /* + "<td><a href = 'javascript: void(0);' class='btn btn-danger'  title = 'Remove' onclick='Remove(this);'> <span class='fa fa-minus'></span></a ></td >"*/
+            + "</tr > ";
+        $("#tblParticipantList tbody").append(textbox);
+        //Clear the TextBoxes.
+        txtTargetDate.val("");
+        txtRevisedDate.val("");
+        txtCompletionDate.val("");
+        $("#ddlCertificationStatus").val(0);
+        $("#ddlSampletobesentfortrial").val(0);
+        $("#ddlItemcreationBOMRouting").val(0);
+        $("#ddlTranslationStatus").val(0);
+        $("#txtStatusofcurrentactionsunderplan").val(0);
+        $("#txtCustomer").val(0);
+        $("#txtResp").val(0);
+        txtRemarks.val("");
+        MarkAsComplete.attr("checked", false);
+    });
+    function Remove(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("tr");
+        var name = $("td", row).eq(0).html();
+        if (confirm("Do you want to delete selected row")) {
+            //Get the reference of the Table.
+            var table = $("#tblParticipantList")[0];
+
+            //Delete the Table row using it's Index.
+            table.deleteRow(row[0].rowIndex);
+        }
+    };
+    function GetPlan(e) {
+        debugger;
+        var vdv = $(e).closest("tr").find("#Statusofcurrentactionsunderplan option:selected").val();
+        $(e).closest("tr").find(".req1").attr('value', vdv);
+        $(e).closest("tr").find(".HdnPlan1").attr('value', vdv);
+    }
+    function GetCust(e) {
+        debugger;
+        var vdv = $(e).closest("tr").find("#Customer option:selected").val();
+        $(e).closest("tr").find(".req2").attr('value', vdv);
+        $(e).closest("tr").find(".HdnPlan2").attr('value', vdv);
+    }
+    function GetResp(e) {
+        debugger;
+        var vdv = $(e).closest("tr").find("#Resp option:selected").val();
+        $(e).closest("tr").find(".req3").attr('value', vdv);
+        $(e).closest("tr").find(".HdnPlan3").attr('value', vdv);
+    }
+    function GetCerti(e) {
+        debugger;
+        var vdv = $(e).closest("tr").find("#CertificationStatus option:selected").val();
+        $(e).closest("tr").find(".req7").attr('value', vdv);
+        $(e).closest("tr").find(".HdnPlan4").attr('value', vdv);
+    }
+    function GetTrial(e) {
+        debugger;
+        var vdv = $(e).closest("tr").find("#Sampletobesentfortrial option:selected").val();
+        $(e).closest("tr").find(".req8").attr('value', vdv);
+        $(e).closest("tr").find(".HdnPlan5").attr('value', vdv);
+    }
+    function GetRout(e) {
+        debugger;
+        var vdv = $(e).closest("tr").find("#ItemcreationBOMRouting option:selected").val();
+        $(e).closest("tr").find(".req9").attr('value', vdv);
+        $(e).closest("tr").find(".HdnPlan6").attr('value', vdv);
+    }
+    function GetTSt(e) {
+
+        var vdv = $(e).closest("tr").find("#TranslationStatus option:selected").val();
+        $(e).closest("tr").find(".req10").attr('value', vdv);
+        $(e).closest("tr").find(".HdnPlan7").attr('value', vdv);
+    }
+    function GetMarkasComplete(e) {
+        debugger;
+        var cdv;
+        //cdv = $(e).closest("tr").find('#txtMarkAsComplete').is(':checked');
+        cdv = $(e).closest("tr").find('#MarkAsComplete').is(':checked');
+        $(e).closest("tr").find("#MarkAsComplete").attr('value', cdv);
+        $(e).closest("tr").find(".HdnPlan8").attr('value', cdv);
+    }
+
+    function GetPlan1(e) {
+        debugger;
+        var vdv = $(e).closest("tr").find("#ddlplanhtml option:selected").val();
+        $(e).closest("tr").find(".txtplan").attr('value', vdv);
+    }
+    function GetCust1(e) {
+        debugger;
+        var vdv = $(e).closest("tr").find("#ddlCusthtml option:selected").val();
+        $(e).closest("tr").find(".txtcus").attr('value', vdv);
+    }
+    function GetResp1(e) {
+        debugger;
+        var vdv = $(e).closest("tr").find("#ddlResphtml option:selected").val();
+        $(e).closest("tr").find(".txtResphtml").attr('value', vdv);
+    }
+    function GetCerti1(e) {
+        debugger;
+        var vdv = $(e).closest("tr").find("#ddlCertihtml option:selected").val();
+        $(e).closest("tr").find(".txtcerti").attr('value', vdv);
+    }
+    function GetTrial1(e) {
+        debugger;
+        var vdv = $(e).closest("tr").find("#ddlTrialhtml option:selected").val();
+        $(e).closest("tr").find(".txtsample").attr('value', vdv);
+    }
+    function GetRout1(e) {
+        debugger;
+        var vdv = $(e).closest("tr").find("#ddlRouthtml option:selected").val();
+        $(e).closest("tr").find(".txtitemroute").attr('value', vdv);
+    }
+    function GetTSt1(e) {
+
+        var vdv = $(e).closest("tr").find("#ddlGetTSthtml option:selected").val();
+        $(e).closest("tr").find(".txttranslations").attr('value', vdv);
+    }
+    function GetMarkasComplete1(e) {
+        debugger;
+        var cdv;
+        //cdv = $(e).closest("tr").find('#txtMarkAsComplete').is(':checked');
+        cdv = $(e).closest("tr").find('#MarkAsComplete').is(':checked');
+        $(e).closest("tr").find("#MarkAsComplete").attr('value', cdv);
+        $(e).closest("tr").find(".HdnPlan8").attr('value', cdv);
+    }
+    $("#btnSave").click(function () {
+
+        var flag = false;
+        //if ($("#tblParticipantList tbody tr").length == 0) {
+        //    alert('Please Add Details of Components');
+        //    flag = true;
+           
+        //}
+        $("#tblParticipantList tbody tr").each(function () {
+            if ($(this).find('.req1').val() == "0") {
+                $(this).find('.req1').css("border", "1px solid red");
+                flag = true;
+            } else {
+                $(this).find('.req1').css("border", "1px solid lightgray");
+            }
+            if ($(this).find('.req2').val() == "0") {
+                $(this).find('.req2').css("border", "1px solid red");
+                flag = true;
+            } else {
+                $(this).find('.req2').css("border", "1px solid lightgray");
+            }
+            if ($(this).find('.req3').val() == "0") {
+                $(this).find('.req3').css("border", "1px solid red");
+                flag = true;
+            } else {
+                $(this).find('.req3').css("border", "1px solid lightgray");
+            }
+            //if ($(this).find('.req12').prop("checked") == true) {
+            //    if ($(this).find('.req4').val() == "") {
+            //        $(this).find('.req4').css("border", "1px solid red");
+            //        flag = true;
+            //    } else {
+            //        $(this).find('.req4').css("border", "1px solid lightgray");
+            //    }
+            //    if ($(this).find('.req5').val() == "") {
+            //        $(this).find('.req5').css("border", "1px solid red");
+            //        flag = true;
+            //    } else {
+            //        $(this).find('.req5').css("border", "1px solid lightgray");
+            //    }
+            //    if ($(this).find('.req6').val() == "") {
+            //        $(this).find('.req6').css("border", "1px solid red");
+            //        flag = true;
+            //    } else {
+            //        $(this).find('.req6').css("border", "1px solid lightgray");
+            //    }
+            //}
+
+            
+
+
+            if ($(this).find('.req7').val() == "0") {
+                $(this).find('.req7').css("border", "1px solid red");
+                flag = true;
+            } else {
+                $(this).find('.req7').css("border", "1px solid lightgray");
+            }
+            if ($(this).find('.req8').val() == "0") {
+                $(this).find('.req8').css("border", "1px solid red");
+                flag = true;
+            } else {
+                $(this).find('.req8').css("border", "1px solid lightgray");
+            }
+            if ($(this).find('.req9').val() == "0") {
+                $(this).find('.req9').css("border", "1px solid red");
+                flag = true;
+            } else {
+                $(this).find('.req9').css("border", "1px solid lightgray");
+            }
+            if ($(this).find('.req10').val() == "0") {
+                $(this).find('.req10').css("border", "1px solid red");
+                flag = true;
+            } else {
+                $(this).find('.req10').css("border", "1px solid lightgray");
+            }
+            if ($(this).find('.req11').val() == "") {
+                $(this).find('.req11').css("border", "1px solid red");
+                flag = true;
+            } else {
+                $(this).find('.req11').css("border", "1px solid lightgray");
+            }
+            //if ($(this).find('.req12').val() == "") {
+            //    $(this).find('.req12').css("border", "1px solid red");
+            //    flag = true;
+            //} else {
+            //    $(this).find('.req12').css("border", "1px solid lightgray");
+            //}
+
+        })
+        if (flag) {
+            return false;
+        }
+    })
+
+</script>
+
+<script src="~/Scripts/jquery-ui.min.js"></script>
+<script src="~/Scripts/jquery.validate.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+
+

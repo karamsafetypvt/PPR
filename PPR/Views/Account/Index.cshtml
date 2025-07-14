@@ -1,0 +1,145 @@
+﻿@using PPRModel.Model
+@model LoginModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+    <link rel="stylesheet" href="~/Content/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/Content/css/bootstrap-responsive.min.css" />
+    <link rel="stylesheet" href="~/Content/css/maruti-login.css" />
+    <link rel="shortcut icon" type="image/png" href="../../img/Karam.png" />
+    <link href="~/Content/css/sweetalert.css" rel="stylesheet" />
+    <style>
+        .sweet-alert .sa-icon.sa-success {
+            left: 177px;
+        }
+    </style>
+</head>
+<body>
+    <div id="loginbox">
+        @using (Html.BeginForm("Index", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <form id="loginform" class="form-vertical" action="index.html">
+                <div class="control-group normal_text"> <h3><img src="../../img/Karam.png" alt="Logo" /> PPR</h3></div>
+                <div class="control-group">
+                    <div class="controls">
+                        <div class="main_input_box">
+                            <span class="add-on"><i class="icon-user"></i></span>
+                            @Html.TextBoxFor(m => m.UserID, new { @Placeholder = "UserId", @id = "txtuserid" })
+                            @*<input type="text" placeholder="Username" />*@
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="controls">
+                        <div class="main_input_box">
+                            <span class="add-on"><i class="icon-lock"></i></span>
+                            @Html.TextBoxFor(m => m.Password, new { @Placeholder = "Password", type = "Password", @id = "txtpassword" })
+                            @*<input type="password" placeholder="Password" />*@
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <span class="pull-left"><a href="~/Account/UserEmail" class="flip-link btn btn-inverse" id="to-recover">Lost password?</a></span>
+                    @*<span class="pull-right"><input type="submit" class="btn btn-success" value="Login" /></span>*@
+                    <span class="pull-right"><button type="submit" class="btn btn-success btnSubmit">Login</button></span>
+                </div>
+                <span class="text-center errormsg" style="color:red;text-align:center;margin-left:5%"> @Html.Raw(@ViewBag.Message)</span>
+
+            </form>
+        }
+    </div>
+    <script src="~/Content/js/jquery.min.js"></script>
+    <script src="~/Content/js/maruti.login.js"></script>
+    <script src="~/Content/js/sweetalert-dev.js"></script>
+    <script>
+        $('.btnSubmit').click(function () {
+            
+            if ($("#txtpassword").val() == '' && $("#txtuserid").val() == '') {
+                $(".errormsg").text("");
+                $(".errormsg").text("Please Enter UserId and Password.");
+                return false;
+            }
+            if ($("#txtpassword").val() == null || $("#txtpassword").val() == '') {
+                
+                $(".errormsg").text("");
+                $(".errormsg").text("Please Enter Password.");
+                return false;
+            }
+            if ($("#txtuserid").val() == null || $("#txtuserid").val() == '') {
+                
+                $(".errormsg").text("");
+                $(".errormsg").text("Please Enter UserId.");
+                return false;
+            }
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var queryCode;
+            var querymessage;
+            const urlParams = new URLSearchParams(location.search);
+            for (const [key, value] of urlParams) {
+                if (key == "ReturnMessage") {
+                    querymessage = `${value}`;
+                } if (key == "ReturnCode")
+                queryCode = `${value}`;
+            }
+            var returnMessage = querymessage;
+            var returnCode =  queryCode;
+         @*var returnMessage = "@TempData["ReturnMessage"]";
+            var returnCode = "@TempData["ReturnCode"]";*@
+            var href = "@TempData["href"]";
+            var MessageType = '@TempData["MessageType"]';
+            if (returnCode.length > 0) {
+                
+                //console.log(returnCode +'::3434')
+                if (href.length > 0)
+                {
+                    if (returnCode == -5)
+                        AlertWithTitleIconNewWindow("Alert", returnMessage, "warning", href);
+                    else if (returnCode < 1)
+                        AlertWithTitleIconNewWindow("Error", returnMessage, "error", href);
+                    else if (returnCode > 0)
+                        AlertWithTitleIconNewWindow("Success", returnMessage, "success", href);
+                }
+                else {
+                     if (returnCode == -5)
+                         AlertWithTitleIcon("Alert", returnMessage, "warning");
+                    else if (returnCode <1)
+                        AlertWithTitleIcon("Error", returnMessage, "error");
+                    else if (returnCode>0)
+                        AlertWithTitleIcon("Success", returnMessage, "success");
+                }
+         }
+            function AlertWithTitleIcon(title, text, type) {
+                
+            swal({
+                title: title,
+                text: text,
+                type: type
+            });
+        }
+            function AlertWithTitleIconNewWindow(title, text, type, newWindow) {
+                
+            swal({
+                title: title,
+                text: text,
+                type: type
+            },
+                function () {
+                    window.location.href = newWindow;
+                });
+        }
+
+
+    });
+
+    </script>
+</body>
+</html>

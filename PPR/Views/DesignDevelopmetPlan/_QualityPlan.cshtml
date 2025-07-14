@@ -1,0 +1,420 @@
+﻿@using PPRModel.Model
+@model QualityPlanModel
+<style>
+    .control-label {
+        font-weight: bold
+    }
+
+    .form-horizontal .controls {
+        margin-left: 38px !important;
+    }
+</style>
+
+<link href="~/Content/css/sweetalert.css" rel="stylesheet" />
+<div class="row-fluid">
+    <div class="span12">
+
+        <div class="widget-box">
+            <div class="widget-title">
+                <span class="icon"><i class="icon-th"></i></span>
+                <h5>Quality Plan</h5>
+            </div>
+            @using (Html.BeginForm("SaveQualityPlan", "DesignDevelopmetPlan", FormMethod.Post, new { id = "form_validation", @class = "form-horizontal", enctype = "multipart/form-data" }))
+            {
+                <div class="widget-content nopadding">
+                    <div class="form-horizontal">
+                        <table class="table table table-condensed ">
+                            <thead>
+
+                            </thead>
+                            <tbody>
+                                <tr class="odd gradeX">
+                                    <td>
+                                        <label>
+                                            <b>Project No.</b> : <span>
+                                                @Html.DisplayFor(m => m.ProjectNO)
+                                                @Html.HiddenFor(m => m.ProjectID, new { @id = "projectid" })
+                                            </span>
+                                        </label>
+
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td>
+                                        <label><b>Date</b> : <span>@Html.DisplayFor(m => m.REF_Date)</span></label>
+
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td>
+                                        <label><b>Project Title</b> : <span>@Html.DisplayFor(m => m.ProjectTitle)</span></label>
+
+                                    </td>
+                                    <td>
+                                    </td>
+
+                                </tr>
+
+                                <tr class="odd gradeX">
+
+                                    <td>
+                                        <label><b>Coordinator</b> : <span>@Html.DisplayFor(m => m.Coordinator)</span></label>
+
+                                    </td>
+                                    <td>
+                                        <label class="control-label"></label>
+                                    </td>
+                                    <td>
+                                        <label class="control-label"></label>
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="widget-content nopadding">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A</td>
+                                <td>WORK INSTRUCTIONS </td>
+                                <td>
+                                    <div class="controls">
+                                        <label>
+                                            @*<input type="checkbox" name="radios" />*@
+                                            @Html.CheckBoxFor(m => m.WORKINSTRUCTIONS_STATUS)
+
+                                        </label>
+                                        @Html.HiddenFor(m => m.ProjectID, new { @Class = "from-control span11" })
+                                        @Html.HiddenFor(m => m.PlanID, new { @Class = "from-control span11" })
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="controls">
+
+                                        @Html.TextBoxFor(m => m.WORKINSTRUCTIONS_DOCUMENTS, new { @Class = "from-control span11", @type = "File" })
+                                        @Html.HiddenFor(m => m.WORKINSTRUCTIONS_DOCUMENTSPATH)
+                                        @Html.HiddenFor(m => m.WORKINSTRUCTIONS_DocumentName)
+                                        <a href="@Model.WORKINSTRUCTIONS_DOCUMENTSPATH" id="Doc_WI" target="_blank" rel="noopener">@Model.WORKINSTRUCTIONS_DocumentName</a>
+                                        @if (!string.IsNullOrEmpty(Model.WORKINSTRUCTIONS_DOCUMENTSPATH) && @Model.WORKINSTRUCTIONS_DOCUMENTSPATH != "")
+                                        {
+                                            <button type="button" class="btn btn-sm btn-danger" id="WI_btn" onclick="remove_WORKINSTRUCTIONS(this)" style="padding:0px 5px"><span class="fa fa-remove"></span></button>
+                                        }
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="controls">
+                                        <input type="text" />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="controls fromtextbox">
+
+                                        @Html.TextBoxFor(m => m.WORKINSTRUCTIONS_REMARKS, new { @Class = "from-control span11" })
+                                    </div>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>B</td>
+                                <td>INSPECTION CRITERION </td>
+                                <td>
+                                    <div class="controls">
+                                        @Html.CheckBoxFor(m => m.INSPECTIONCRITERION_STATUS)
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="controls">
+                                        @*<input type="file" name="ImageFile" />*@
+                                        @Html.TextBoxFor(m => m.INSPECTIONCRITERION_DOCUMENTS, new { @Class = "from-control span11", type = "file" })
+                                        @Html.HiddenFor(m => m.INSPECTIONCRITERION_DOCUMENTSPATH)
+                                        @Html.HiddenFor(m => m.INSPECTIONCRITERION_DocumentName)
+                                        @*@Html.DisplayFor(m => m.INSPECTIONCRITERION_DocumentName)*@
+                                        <a href="@Model.INSPECTIONCRITERION_DOCUMENTSPATH" id="Doc_IC" target="_blank" rel="noopener">@Model.INSPECTIONCRITERION_DocumentName</a>
+                                        @if (!string.IsNullOrEmpty(Model.INSPECTIONCRITERION_DOCUMENTSPATH) && @Model.INSPECTIONCRITERION_DOCUMENTSPATH != "")
+                                        {
+                                            <button type="button" class="btn btn-sm btn-danger" id="IC_btn" onclick="remove_INSPECTIONCRITERION(this)" style="padding:0px 5px"><span class="fa fa-remove"></span></button>
+                                        }
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="controls">
+                                        <input type="text" />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="controls fromtextbox">
+                                        @Html.TextBoxFor(m => m.INSPECTIONCRITERION_REMARKS, new { @Class = "from-control span11" })
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>TESTING PLAN </td>
+                                <td>
+                                    <div class="controls">
+                                        @Html.CheckBoxFor(m => m.TESTINGPLAN_STATUS)
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="controls">
+
+                                        @Html.TextBoxFor(m => m.TESTINGPLAN_DOCUMENTS, new { @Class = "from-control span11", @type = "File" })
+                                        @Html.HiddenFor(m => m.TESTINGPLAN_DOCUMENTSPATH)
+                                        @Html.HiddenFor(m => m.TESTINGPLAN_DocumentName)
+                                        <a href="@Model.TESTINGPLAN_DOCUMENTSPATH" target="_blank" id="Doc_TD" rel="noopener">@Model.TESTINGPLAN_DocumentName</a>
+                                        @if (!string.IsNullOrEmpty(Model.TESTINGPLAN_DOCUMENTSPATH) && @Model.TESTINGPLAN_DOCUMENTSPATH != "")
+                                        {
+                                            <button type="button" class="btn btn-sm btn-danger" id="TD_btn" onclick="remove_TESTINGPLAN(this)" style="padding:0px 5px"><span class="fa fa-remove"></span></button>
+                                        }
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="controls">
+                                        <input type="text" />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="controls fromtextbox">
+                                        @Html.TextBoxFor(m => m.TESTINGPLAN_REMARKS, new { @Class = "from-control span11" })
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>D</td>
+                                <td>Technical Data Sheet</td>
+                                <td>
+                                    <div class="controls">
+                                        @Html.CheckBoxFor(m => m.TechnicalDataSheet_STATUS)
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="controls">
+
+                                        @Html.TextBoxFor(m => m.TechnicalDataSheet_DOCUMENTS, new { @Class = "from-control span11", @type = "File" })
+                                        @Html.HiddenFor(m => m.TechnicalDataSheet_DOCUMENTSPATH)
+                                        @Html.HiddenFor(m => m.TechnicalDataSheet_DocumentName)
+                                        <a href="@Model.TechnicalDataSheet_DOCUMENTSPATH" id="Doc_TDS" target="_blank" rel="noopener">@Model.TechnicalDataSheet_DocumentName</a>
+                                        @if (!string.IsNullOrEmpty(Model.TechnicalDataSheet_DOCUMENTSPATH) && @Model.TechnicalDataSheet_DOCUMENTSPATH != "")
+                                        {
+                                            <button type="button" class="btn btn-sm btn-danger" id="TDS_btn" onclick="remove_TechnicalDataSheet(this)" style="padding:0px 5px"><span class="fa fa-remove"></span></button>
+                                        }
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="controls">
+                                        <input type="text" />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="controls fromtextbox">
+                                        @Html.TextBoxFor(m => m.TechnicalDataSheet_REMARKS, new { @Class = "from-control span11" })
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>E</td>
+                                <td>Technical Drawings</td>
+                                <td>
+                                    <div class="controls">
+                                        @Html.CheckBoxFor(m => m.TechnicalDrawings_STATUS)
+                                    </div>
+                                </td>
+                                <td>
+
+                                    <div class="controls">
+                                        @Html.TextBoxFor(m => m.TechnicalDrawings_DOCUMENTS, new { @Class = "from-control span11", @type = "File", @multiple = "multiple" })
+                                        @Html.HiddenFor(m => m.TechnicalDrawings_DOCUMENTSPATH)
+                                        @Html.HiddenFor(m => m.TechnicalDrawings_DocumentName)
+
+                                        @for (int i = 0; i < Model._DocDetailsList.Count; i++)
+                                        {
+                                            var item = Model._DocDetailsList[i];
+                                            <div id="doc-item-@i">
+                                                <a href="@item.DocPath" target="_blank" rel="noopener">@item.DocTitle</a>
+                                                @if (!string.IsNullOrEmpty(@item.DocPath))
+                                                {
+                                                <button type="button" class="btn btn-sm btn-danger" onclick="removeTechnicalDrawing(@i)" style="padding:0px 5px"><span class="fa fa-remove"></span></button>
+                                                }
+                                                <br />
+                                            </div>
+                                        }
+
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="controls">
+                                        <input type="text" />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="controls fromtextbox">
+                                        @Html.TextBoxFor(m => m.TechnicalDrawings_REMARKS, new { @Class = "from-control span11" })
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>F</td>
+                                <td>Technical File (Product file)</td>
+                                <td>
+                                    <div class="controls">
+                                        @Html.CheckBoxFor(m => m.TechnicalFile_STATUS)
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="controls">
+
+                                        @Html.TextBoxFor(m => m.TechnicalFile_DOCUMENTS, new { @Class = "from-control span11", @type = "File" })
+                                        @Html.HiddenFor(m => m.TechnicalFile_DOCUMENTSPATH)
+                                        @Html.HiddenFor(m => m.TechnicalFile_DocumentName)
+                                        <a href="@Model.TechnicalFile_DOCUMENTSPATH" id="Doc_TF" target="_blank" rel="noopener">@Model.TechnicalFile_DocumentName</a>
+                                        @if (!string.IsNullOrEmpty(Model.TechnicalFile_DocumentName) && @Model.TechnicalFile_DocumentName != "")
+                                        {
+                                            <button type="button" class="btn btn-sm btn-danger" id="TF_btn" onclick="remove_TechnicalFile(this)" style="padding:0px 5px"><span class="fa fa-remove"></span></button>
+                                        }
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="controls">
+                                        <input type="text" />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="controls fromtextbox">
+                                        @Html.TextBoxFor(m => m.TechnicalFile_REMARKS, new { @Class = "from-control span11" })
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>G</td>
+                                <td>User Instruction</td>
+                                <td>
+                                    <div class="controls">
+                                        @Html.CheckBoxFor(m => m.UserInstruction_STATUS)
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="controls">
+                                        @Html.TextBoxFor(m => m.UserInstruction_DOCUMENTS, new { @Class = "from-control span11", @type = "File" })
+                                        @Html.HiddenFor(m => m.UserInstruction_DOCUMENTSPATH)
+                                        @Html.HiddenFor(m => m.UserInstruction_DocumentName)
+                                        <a href="@Model.UserInstruction_DOCUMENTSPATH" target="_blank" id="Doc_UI" rel="noopener">@Model.UserInstruction_DocumentName</a>
+                                        @if (!string.IsNullOrEmpty(Model.UserInstruction_DOCUMENTSPATH) && @Model.UserInstruction_DOCUMENTSPATH != "")
+                                        {
+                                            <button type="button" class="btn btn-sm btn-danger" id="UI_btn" onclick="remove_UserInstruction(this)" style="padding:0px 5px"><span class="fa fa-remove"></span></button>
+                                        }
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="controls">
+                                        <input type="text" />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="controls fromtextbox">
+                                        @Html.TextBoxFor(m => m.UserInstruction_REMARKS, new { @Class = "from-control span11" })
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+                    
+                    @if (Model.PPR_Status != "3")
+                    {
+                        <div class="form-actions" style="text-align: center;padding-left:0px">
+                            <a href="~/DesignDevelopmetPlan/DevelopmentPlan?ProjectID=@Model.ProjectID" class="btn btn-danger">Cancel</a>
+                            @*@if (Model.ProjectID == 0)
+                                {*@
+                            <button type="submit" class="btn btn-success">Save & Update</button>
+                            @*}
+                                else
+                                {*@
+                            @*<button type="submit" class="btn btn-info">Edit</button>*@
+                            @*}*@
+
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<script>
+    function remove_WORKINSTRUCTIONS(button) {
+        debugger
+        $('#WORKINSTRUCTIONS_DOCUMENTS').val('');
+        $('#WORKINSTRUCTIONS_DOCUMENTSPATH').val('');
+        $('#WORKINSTRUCTIONS_DocumentName').val('');
+        /*$("#uniform-DesignValidation_DOCUMENTS").find(".filename").empty(); */
+        $('#Doc_WI').text('');
+        $('#WI_btn').hide();
+    }
+    function remove_INSPECTIONCRITERION(button) {
+        debugger
+        $('#INSPECTIONCRITERION_DOCUMENTS').val('');
+        $('#INSPECTIONCRITERION_DOCUMENTSPATH').val('');
+        $('#INSPECTIONCRITERION_DocumentName').val('');
+        //$("#uniform-DesignValidation_DOCUMENTS").find(".filename").empty();
+        $('#Doc_IC').text('');
+        $('#IC_btn').hide();
+    }
+    function remove_TESTINGPLAN(button) {
+        debugger
+        $('#TESTINGPLAN_DOCUMENTS').val('');
+        $('#TESTINGPLAN_DOCUMENTSPATH').val('');
+        $('#TESTINGPLAN_DocumentName').val('');
+        //$("#uniform-DesignValidation_DOCUMENTS").find(".filename").empty();
+        $('#Doc_TD').text('');
+        $('#TD_btn').hide();
+    }
+    function remove_TechnicalDataSheet(button) {
+        debugger
+        $('#TechnicalDataSheet_DOCUMENTS').val('');
+        $('#TechnicalDataSheet_DOCUMENTSPATH').val('');
+        $('#TechnicalDataSheet_DocumentName').val('');
+        //$("#uniform-DesignValidation_DOCUMENTS").find(".filename").empty();
+        $('#Doc_TDS').text('');
+        $('#TDS_btn').hide();
+    }
+    function removeTechnicalDrawing(index) {
+        // Remove the specific item from the UI
+        document.getElementById('doc-item-' + index).remove();
+
+        // Update the hidden fields to reflect the remaining items
+        var paths = $('#TechnicalDrawings_DOCUMENTSPATH').val().split(',');
+        var names = $('#TechnicalDrawings_DocumentName').val().split(',');
+
+        paths.splice(index, 1);
+        names.splice(index, 1);
+
+        $('#TechnicalDrawings_DOCUMENTSPATH').val(paths.join(','));
+        $('#TechnicalDrawings_DocumentName').val(names.join(','));
+    }
+    function remove_TechnicalFile(button) {
+        debugger
+        $('#TechnicalFile_DOCUMENTS').val('');
+        $('#TechnicalFile_DOCUMENTSPATH').val('');
+        $('#TechnicalFile_DocumentName').val('');
+        //$("#uniform-DesignValidation_DOCUMENTS").find(".filename").empty();
+        $('#Doc_TF').text('');
+        $('#TF_btn').hide();
+    }
+    function remove_UserInstruction(button) {
+        debugger
+        $('#UserInstruction_DOCUMENTS').val('');
+        $('#UserInstruction_DOCUMENTSPATH').val('');
+        $('#UserInstruction_DocumentName').val('');
+        //$("#uniform-DesignValidation_DOCUMENTS").find(".filename").empty();
+        $('#Doc_UI').text('');
+        $('#UI_btn').hide();
+    }
+</script>
+<script src="~/Content/js/jquery.uniform.js"></script>

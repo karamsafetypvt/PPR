@@ -1,0 +1,11 @@
+﻿@using PPRModel.Model
+@model ProductProjectReportModel
+@{
+    ViewBag.Title = "Edit";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+    @using (Html.BeginForm("Edit", "ProductProjectReport", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        Html.RenderPartial("CreateOrEdit");
+    }
+

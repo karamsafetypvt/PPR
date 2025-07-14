@@ -1,0 +1,312 @@
+﻿@using PPRModel.Model
+@model IndustrialisationModel_New
+<style>
+    .form-horizontal .controls {
+        margin-left: 544px;
+        padding: 10px 0;
+    }
+
+    .form-horizontal .control-label {
+        padding-top: 15px;
+        width: auto;
+        padding-left: 30px;
+    }
+
+    .control-label {
+        font-weight: bold
+    }
+
+    .m-form__help {
+        font-weight: 500 !important;
+        display: inline-block;
+        margin-left: 44%;
+        color: red;
+    }
+
+    .m-form__help1 {
+        font-weight: 500 !important;
+        display: inline-block;
+        color: red;
+    }
+</style>
+<link href="~/Content/css/uniform.css" rel="stylesheet" />
+<div class="row-fluid">
+    <div class="span12">
+
+        @using (Html.BeginForm("SaveInduatrilisationDataSheet_New", "DesignDevelopmetPlan", FormMethod.Post, new { id = "form_validation", @class = "form-horizontal", enctype = "multipart/form-data" }))
+        {
+            <div class="widget-box">
+                <div class="widget-title">
+                    <span class="icon"> <i class="icon-align-justify"></i> </span>
+                    <h5>CheckList For Induatrilisation</h5>
+                </div>
+                <div class="widget-content nopadding">
+                    <div class="control-group">
+                        <label class="control-label">Date :</label>
+                        <div data-date="@DateTime.Now.ToString("MM-dd-yyyy")" class="input-append date datepicker " data-date-format="mm-dd-yyyy">
+                            @Html.TextBoxFor(m => m.INDUSTRIALISATIONDate, new { @class = "span11", @Placeholder = "Date Of Sample Sent", type = "Date" })
+
+                        </div>
+                        @Html.ValidationMessageFor(m => m.INDUSTRIALISATIONDate, "", new { @class = "m-form__help1" })
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">PROJECT NO :</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.ProjectNO, new { @Class = "from-control span11", @Disabled = "Disabled" })
+                            @Html.HiddenFor(m => m.ProjectID, new { @Class = "from-control span11" })
+                            @Html.HiddenFor(m => m.PlanID, new { @Class = "from-control span11" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Product Category :</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.ProductCategory, new { @Class = "from-control span11", @Disabled = "Disabled" })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.ProductCategory, "", new { @class = "m-form__help" })
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Item Picture : </label>
+
+
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.QUALITYPLAN_DOCUMENTS, new { @Class = "from-control span11", @type = "File" })
+                            @Html.HiddenFor(m => m.QUALITYPLAN_DOCUMENTSPATH)
+                            @Html.HiddenFor(m => m.ItemPicture)
+                            <a href="@Model.QUALITYPLAN_DOCUMENTSPATH" target="_blank" rel="noopener" id="Doc_IC1">@Model.ItemPicture</a>
+                            @if (!string.IsNullOrEmpty(Model.QUALITYPLAN_DOCUMENTSPATH) && @Model.ItemPicture != "")
+                            {
+                                <button type="button" class="btn btn-sm btn-danger" id="IC_btn1" onclick="remove_ItemPicture(this)" style="padding:0px 5px"><span class="fa fa-remove"></span></button>
+                            }
+                        </div>
+
+                    </div>
+
+
+                    <div class="control-group">
+                        <label class="control-label">TDS :</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.TDS, new { @Class = "from-control span11" })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.TDS, "", new { @class = "m-form__help" })
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Manual Instruction :</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.ManualInstruction, new { @Class = "from-control span11" })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.ManualInstruction, "", new { @class = "m-form__help" })
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Certification  </label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.Certification, new { @Class = "from-control span11" })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.Certification, "", new { @class = "m-form__help" })
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Item Code </label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.ItemCode, new { @Class = "from-control span11" })
+
+                        </div>
+                        @Html.ValidationMessageFor(m => m.ItemCode, "", new { @class = "m-form__help" })
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">Applicable Standard</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.ApplicableStandard, new { @Class = "from-control span11" })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.ApplicableStandard, "", new { @class = "m-form__help" })
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Customer Name</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.CustomerName, new { @Class = "from-control span11" })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.CustomerName, "", new { @class = "m-form__help" })
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">BOM Creation Status in ERP</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.BOMCreationStatus, new { @Class = "from-control span11" })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.BOMCreationStatus, "", new { @class = "m-form__help" })
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Safety Stock Creation Status in ERP</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.SafetyStockCreationStatus, new { @Class = "from-control span11" })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.SafetyStockCreationStatus, "", new { @class = "m-form__help" })
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Sample</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.Sample, new { @Class = "from-control span11" })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.Sample, "", new { @class = "m-form__help" })
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Packaging</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.Packaging, new { @Class = "from-control span11" })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.Packaging, "", new { @class = "m-form__help" })
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Work Instructions</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.WorkInstructions, new { @Class = "from-control span11" })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.WorkInstructions, "", new { @class = "m-form__help" })
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">InspectionCriterion</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.InspectionCriterion, new { @Class = "from-control span11" })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.InspectionCriterion, "", new { @class = "m-form__help" })
+                    </div>
+                     <div class="control-group">
+                         <label class="control-label">Remark</label>
+                        <div class="controls">
+                            @Html.TextAreaFor(m => m.Remark, new { @Class = "from-control span11" ,@maxlength="500",@rows="3"})
+                        </div>
+                        
+                    </div>
+
+                </div>
+                
+
+                @if (Model.PPR_Status != "3")
+                {
+                    <div class="form-actions" style="text-align: center;padding-left:0px"> 
+                        <a href="~/DesignDevelopmetPlan/DevelopmentPlan?ProjectID=@Model.ProjectID" class="btn btn-danger">Cancel</a>
+                        <button type="submit" class="btn btn-success" id="btnSave">Save & Update</button>
+                    </div>
+                }
+            </div> 
+           
+        }
+
+    </div>
+</div>
+<script src="~/Content/js/jquery.uniform.js"></script>
+
+<script type="text/javascript">
+    /* $("body").on("click", "#addnewrow", function () {*/
+    $("#addnewrow").on("click", function () {
+
+        //Reference the Name and Country TextBoxes.
+        var txtDRGNO = $("#txtDRGNO");
+        var txTitle = $("#txTitle");
+        var txtQuantity = $("#txtQuantity");
+        var txtComponentStatus = $("#txtComponentStatus");
+        var txtInhouse = $("#txtInhouse");
+        var txtOutside = $("#txtOutside");
+        var txtToolingStatus = $("#txtToolingStatus");
+        var rowcount = $("#tblParticipantList > tbody > tr").length;
+        /*var name1 = "IsdustrialisationModel[" + rowcount + "].DRGNO";*/
+        var name1 = "_detailofcomponent[" + rowcount + "].DRGNO";
+        var name2 = "_detailofcomponent[" + rowcount + "].Title";
+        var name3 = "_detailofcomponent[" + rowcount + "].Quantity";
+        var name4 = "_detailofcomponent[" + rowcount + "].ComponentStatus";
+        var name5 = "_detailofcomponent[" + rowcount + "].Inhouse";
+        var name6 = "_detailofcomponent[" + rowcount + "].Outside";
+        var name7 = "_detailofcomponent[" + rowcount + "].ToolingStatus";
+
+        var textbox = $("<tr><td><input class='from-control span11 req1' type='text' value='" + txtDRGNO.val() + "' name='" + name1 + "'></td >"
+            + "<td><input type='text' class='from-control span11 req2' value='" + txTitle.val() + "' name='" + name2 + "'></td >"
+            + "<td><input type='text' class='from-control span11 req3' onkeypress = 'return isNumberKey(event, this)' value='" + txtQuantity.val() + "' name='" + name3 + "'></td >"
+            + "<td><input type='text' class='from-control span11 req4' value='" + txtComponentStatus.val() + "' name='" + name4 + "'></td >"
+            + "<td><input type='text' class='from-control span11 req5' value='" + txtInhouse.val() + "' name='" + name5 + "'></td >"
+            + "<td><input type='text' class='from-control span11 req6' value='" + txtOutside.val() + "' name='" + name6 + "'></td >"
+            + "<td><input type='text' class='from-control span11' value='" + txtToolingStatus.val() + "' name='" + name7 + "'></td >"
+            + "<td><input type='button' class='btn btn-danger' value='Remove' onclick='Remove(this);'></td >"
+            + "</tr > ");
+        $("#tblParticipantList tbody").append(textbox);
+
+        //Clear the TextBoxes.
+        txtDRGNO.val("");
+        txTitle.val("");
+        txtQuantity.val("");
+        txtComponentStatus.val("")
+        txtInhouse.val("");
+        txtOutside.val("");
+        txtToolingStatus.val("");
+    });
+
+
+    function Remove(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("tr");
+        var name = $("td", row).eq(0).html();
+        if (confirm("Do you want to delete selected row.")) {
+            //Get the reference of the Table.
+            var table = $("#tblParticipantList")[0];
+
+            //Delete the Table row using it's Index.
+            table.deleteRow(row[0].rowIndex);
+        }
+    };
+</script>
+<script type="text/javascript">
+
+    $("#btnSave").click(function () {
+        var flag = false
+        $("#tblParticipantList tbody tr").each(function () {
+            if ($(this).find('.req1').val() == "" || $(this).find('.req1').val() == null) {
+                $(this).find('.req1').css("border", "1px solid red");
+                flag = true;
+            } else {
+                $(this).find('.req1').css("border", "1px solid lightgray");
+            }
+            if ($(this).find('.req2').val() == "" || $(this).find('.req2').val() == null) {
+                $(this).find('.req2').css("border", "1px solid red");
+                flag = true;
+            } else {
+                $(this).find('.req2').css("border", "1px solid lightgray");
+            }
+            if ($(this).find('.req3').val() == "" || $(this).find('.req3').val() == null) {
+                $(this).find('.req3').css("border", "1px solid red");
+                flag = true;
+            } else {
+                $(this).find('.req3').css("border", "1px solid lightgray");
+            }
+            if ($(this).find('.req4').val() == "" || $(this).find('.req4').val() == null) {
+                $(this).find('.req4').css("border", "1px solid red");
+                flag = true;
+            } else {
+                $(this).find('.req4').css("border", "1px solid lightgray");
+            }
+            //if ($(this).find('.req5').val() == "" || $(this).find('.req6').val() == null) {
+            //    $(this).find('.req5').css("border", "1px solid red");
+            //    flag = true;
+            //} else {
+            //    $(this).find('.req5').css("border", "1px solid lightgray");
+            //}
+            //if ($(this).find('.req6').val() == "" || $(this).find('.req6').val() == null) {
+            //    $(this).find('.req6').css("border", "1px solid red");
+            //    flag = true;
+            //} else {
+            //    $(this).find('.req6').css("border", "1px solid lightgray");
+            //}
+        })
+        if (flag) {
+            return false;
+        }
+    })
+    function remove_ItemPicture(button) {
+        debugger
+        $('#QUALITYPLAN_DOCUMENTS').val('');
+        $('#QUALITYPLAN_DOCUMENTSPATH').val('');
+        $('#ItemPicture').val(''); 
+        $('#Doc_IC1').text('');
+        $('#IC_btn1').hide();
+    }
+</script>
+<script src="~/CustomJS/Utility.js"></script>
+<script src="~/Scripts/jquery-ui.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>

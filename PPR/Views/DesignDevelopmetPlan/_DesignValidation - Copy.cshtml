@@ -1,0 +1,263 @@
+﻿@using PPRModel.Model
+@model DesignValidationModel
+<style>
+    .control-label {
+        font-weight: bold
+    }
+    .m-form__help {
+        font-weight: 500 !important;
+        display: inline-block;
+        margin-left: 0px;
+        color: red;
+    }
+</style>
+<link rel="stylesheet" href="~/Content/css/datepicker.css" />
+<link href="~/Content/css/fullcalendar.css" rel="stylesheet" />
+<link href="~/Content/css/sweetalert.css" rel="stylesheet" />
+<div class="row-fluid">
+    <div class="span12">
+
+        <div class="widget-box">
+            <div class="widget-title">
+                <span class="icon"><i class="icon-th"></i></span>
+                <h5>Design Validation</h5>
+            </div>
+            @using (Html.BeginForm("SaveDesignValidationPlan", "DesignDevelopmetPlan", FormMethod.Post, new { id = "form_validation", @class = "form-horizontal", enctype = "multipart/form-data" }))
+            {
+                <div class="widget-content nopadding">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th colspan="2">Project No.</th>
+                                <td>
+                                    @Html.DisplayFor(m => m.ProjectNO)
+                                </td>
+                                <th colspan="1">Project Date</th>
+                                <td>
+                                    @Html.DisplayFor(m => m.ProjectDate)
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <th colspan="2">Sample Sent To KTC</th>
+                                <td>
+
+                                    @Html.CheckBoxFor(m => m.SampleSentToKTC, new { @id = "chksamplesenttoktc", @checked = true })
+
+                                </td>
+                                <th colspan="1">Date Of Sample Sent</th>
+                                <td>
+                                    @Html.TextBoxFor(m => m.DateOfSampleSent, new { @class = "span11", @Placeholder = "Date Of Sample Sent", type = "Date" })
+                                    @Html.ValidationMessageFor(m => m.DateOfSampleSent, "", new { @class = "m-form__help" })
+
+                                </td>
+                            </tr>
+                            <tr id="ReasonTR">
+                                <th colspan="2">REASON (IF NO)</th>
+                                <td>
+                                    @Html.TextAreaFor(m => m.Reason, new { @Class = "from-control span11" })
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th>S No.</th>
+                                <th>Details</th>
+                                <th>STATUS</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>FEEDBACK RECEIVED</td>
+                                <td>
+                                    <div class="controls">
+                                        <label>
+                                            @Html.CheckBoxFor(m => m.FEEDBACKRECEIVED)
+                                            @Html.HiddenFor(m => m.ProjectID)
+                                            @Html.HiddenFor(m => m.PlanID)
+                                        </label>
+
+                                    </div>
+
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>IMPROVEMENTS REQUIRED</td>
+                                <td>
+                                    <div class="controls">
+                                        @Html.CheckBoxFor(m => m.IMPROVEMENTSREQUIRED)
+                                    </div>
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>ACTION PLAN</td>
+                                <td>
+                                    <div class="controls">
+                                        @Html.CheckBoxFor(m => m.ACTIONPLAN)
+                                    </div>
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>TARGET DATE </td>
+                                <td>
+                                    <div class="controls">
+                                        @Html.CheckBoxFor(m => m.TARGETDATE)
+                                    </div>
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>RESPONSIBILITY </td>
+                                <td>
+                                    <div class="controls">
+
+                                        @Html.CheckBoxFor(m => m.RESPONSIBILITY)
+                                    </div>
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>SAMPLES RESUBMITTED ON </td>
+                                <td>
+                                    <div class="controls">
+                                        @Html.CheckBoxFor(m => m.SAMPLESRESUBMITTEDON)
+                                    </div>
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>FINAL FEEDBACK</td>
+                                <td>
+                                    <div class="controls">
+                                        @Html.CheckBoxFor(m => m.FINALFEEDBACK)
+                                    </div>
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td>
+                                    Documents( If Any)
+                                </td>
+                                <td>
+                                    <div class="controls">
+                                        @Html.TextBoxFor(m => m.DesignValidation_DOCUMENTS, new { @Class = "from-control span11", @type = "File" })
+                                        @Html.HiddenFor(m => m.DesignValidation_DOCUMENTSPATH)
+                                        @Html.HiddenFor(m => m.DesignValidation_DocumentName)
+                                        <a href="@Model.DesignValidation_DOCUMENTSPATH" target="_blank" rel="noopener">@Model.DesignValidation_DocumentName</a>
+                                    </div>
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td>REMARKS</td>
+                                <td>
+                                    <div class="controls">
+                                        @Html.CheckBoxFor(m => m.REMARKS)
+                                    </div>
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                    <table class="table">
+                        <tr>
+                            <td>
+                                <label class="control-label text-center">
+                                    Prepared By
+                                    <br />
+                                    Sr. Section Officer (R&D)
+                                </label>
+                            </td>
+                            <td>
+                                <label class="control-label text-center">
+                                    Checked By
+                                    <br />
+                                    Principal Lead (R&D)
+                                </label>
+                            </td>
+                            <td>
+                                <label class="control-label text-center">
+                                    Reviewd By<br />
+                                    Chief Lead(R&D)
+                                </label>
+                            </td>
+                            <td>
+                                <label class="control-label text-center">
+                                    Approved By<br />
+                                    HOD (R&D)
+                                </label>
+                            </td>
+                        </tr>
+                    </table>
+                    @*@if (Model.PPR_Status != "3") {*@
+                    <div class="form-actions" style="text-align: center;padding-left:0px">
+                        <a href="~/DesignDevelopmetPlan/DevelopmentPlan?ProjectID=@Model.ProjectID" class="btn btn-danger">Cancel</a>
+                        @*@if (Model.ProjectID == 0)
+                            {*@
+                    <button type="submit" class="btn btn-success">Save & Update</button>
+                        @*}
+                            else
+                            {*@
+                        @*<button type="submit" class="btn btn-info">Edit</button>*@
+                        @*}*@
+
+                    </div>
+
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<script src="~/Content/js/jquery.uniform.js"></script>
+<script src="~/Content/js/fullcalendar.min.js"></script>
+<script src="~/Content/js/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/jquery-ui.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script>
+    $(function () {
+        $("#chksamplesenttoktc").click(function () {
+            if ($(this).is(":checked")) {
+                $("#ReasonTR").hide();
+            } else {
+                $("#ReasonTR").show();
+            }
+        });
+    });
+    $(document).ready(function () {
+        var status = $("#chksamplesenttoktc").val();
+        if (status = "true") {
+            $("#ReasonTR").show();
+        } else {
+            $("#ReasonTR").hide();
+        }
+    });
+
+
+</script>
+
+

@@ -1,0 +1,387 @@
+﻿@using PPRModel.Model
+@model ProductProjectReportModel
+@{
+    ViewBag.Title = "Product Project Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int i = 0;
+}
+<style>
+    .tblrespoonsive {
+        overflow-x: auto;
+    }
+
+    .sweat-alert-inner .sa-icon .sa-warning .col-xs-3 .pulseWarning {
+        left: 10px !important;
+    }
+</style>
+<link href="~/Content/css/select2.css" rel="stylesheet" />
+<link href="~/Content/css/sweetalert.css" rel="stylesheet" />
+@using (Html.BeginForm("PPRList", "DevelopmentSheet", FormMethod.Post))
+{
+    <div id="content">
+        <div id="content-header">
+            <div id="breadcrumb"> <a href="~/ProductProjectReport/Index" class="tip-bottom"><i class="icon-home"></i> Home</a> <a href="~/Dashboard/Index" class="current">Project Master</a> </div>
+            <h1>Development Sheet</h1>
+        </div>
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    @*@if (Convert.ToInt16(Session["PPR_LoggedUserType"]) == 1)
+                    {
+                        <div>
+                            <a href="@Url.Action("Create", "ProductProjectReport")" class="btn btn-primary">Add New Project</a>
+                        </div>
+                    }*@
+                    <div class="widget-content nopadding">
+                        <div class="form-horizontal">
+                            <table class="table table table-condensed ">
+                                <thead>
+
+                                </thead>
+                                <tbody>
+                                    <tr class="odd gradeX">
+                                        <td>
+
+                                            <div style="margin-left: 0%;margin-top: 1%;">
+                                                @Html.TextBoxFor(m => m.SearchbyProjectNo, new { @class = "required", @Placeholder = "Project Number" })
+                                            </div>
+                                        </td>
+                                        <td>
+
+                                            <div style="margin-top:4%; width:100%; margin-left:-73%;">
+                                                @Html.DropDownListFor(m => m.SearchbyStatus, Model._SearchbyStatusList, new { @class = "required" })
+                                            </div>
+                                        </td>
+                                        <td>
+
+                                            <div data-date="@DateTime.Now.ToString("MM-dd-yyyy")" class="input-append date datepicker" data-date-format="mm-dd-yyyy">
+                                                @Html.TextBoxFor(m => m.SearchbyDate, new { @class = "span11", @Placeholder = "Date" })
+                                                <span class="add-on"><i class="icon-th"></i></span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                <button type="submit" class="btn btn-success">Search</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="widget-box">
+                        <div class="widget-title">
+                            <span class="icon"><i class="icon-th"></i></span>
+                            <h5>Project List</h5>
+                        </div>
+
+                        <div class="widget-content nopadding tblrespoonsive">
+                            <table class="table table-bordered data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Sr. No.</th>
+                                        <th>Forward for Approval</th>
+                                        <th style="display:none">ID</th>
+                                        <th>Project Title</th>
+                                        <th>Project No</th>
+                                        <th>Coordinator</th>
+                                        <th>Product Category</th>
+                                        <th>Product Ref. No.</th>
+                                        @*<th>Company Name</th>*@
+                                        <th>Product Description</th>
+                                        <th>Opening Date</th>
+                                        <th>Closing Date</th>
+                                        <th>Created Date</th>
+                                        <th>Created By</th>
+                                        @*<th>Updated Date</th>
+                                            <th>Updated By</th>*@
+                                        <th>Status</th>
+                                        <th>Approval Status</th>
+                                        <th>Approved By</th>
+                                        @if (Convert.ToInt16(Session["PPR_LoggedUserType"]) == 1)
+                                        {
+                                            <th>Action</th>
+                                        }
+
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model._ProductProjectReportList != null)
+                                    {
+
+                                        foreach (var data in Model._ProductProjectReportList)
+                                        {
+                                    <tr class="gradeX">
+                                        <td>@(++i)</td>
+                                        <td style="display:none">@data.ProjectID</td>
+                                        <td class="center">
+                                            @if (Convert.ToInt16(Session["DSLevel"]) == 0 && data.ApprovalStatus == 0)
+                                            {
+
+                                                <a href="/DevelopmentSheet/ChangeDevelopmentSheetStatus?Status=1&ProductID=@data.ProjectID"
+                                                   class="btn btn-success"
+                                                   id="Level_1"
+                                                   title="Action"
+                                                   onclick="return Confirm_ForwardLevel0('Are you sure you want to Forward?',this,0)">Action</a>
+                                            }
+                                            @if (Convert.ToInt16(Session["DSLevel"]) == 1 && data.ApprovalStatus == 1)
+                                            {
+                                                <a href="/DevelopmentSheet/ChangeDevelopmentSheetStatus?Status=2&ProductID=@data.ProjectID"
+                                                   class="btn btn-success"
+                                                   id="Level_2"
+                                                   title="Action"
+                                                   onclick="return Confirm_Forward('Are you sure you want to Forward?',this,1)">Action</a>
+                                            }
+                                            @if (Convert.ToInt16(Session["DSLevel"]) == 2 && data.ApprovalStatus == 2)
+                                            {
+                                                <a href="/DevelopmentSheet/ChangeDevelopmentSheetStatus?Status=3&ProductID=@data.ProjectID"
+                                                   class="btn btn-success"
+                                                   id="Level_3"
+                                                   title="Action"
+                                                   onclick="return Confirm_Forward('Are you sure you want to Forward?',this,2)">Action</a>
+                                            }
+                                            @if (Convert.ToInt16(Session["DSLevel"]) == 3 && data.ApprovalStatus == 3)
+                                            {
+                                                <a href="/DevelopmentSheet/ChangeDevelopmentSheetStatus?Status=4&ProductID=@data.ProjectID"
+                                                   class="btn btn-success"
+                                                   id="Level_4"
+                                                   title="Approve"
+                                                   onclick="return Confirm_Forward('Are you sure you want to Approve?',this,3)">Approve</a>
+                                            }
+                                            @if (Convert.ToString(Session["FP_LoggedUserName"]) == "Admin" && data.ApprovalStatus == 4)
+                                            {
+                                                <a href="/DevelopmentSheet/ChangeDevelopmentSheetStatus?Status=5&ProductID=@data.ProjectID&Type=Next&Remark="
+                                                   class="btn btn-primary"
+                                                   id="Level_5"
+                                                   title="Close"
+                                                   onclick="return Confirm('Are you sure you want to Close?',this,4)">Close</a>
+                                            }
+
+                                        </td>
+                                        <td>
+                                            @data.ProjectTitle
+                                        </td>
+                                        <td>@data.ProjectNO</td>
+
+                                        @*<td>@data.ProjectNO</td>*@
+                                        <td>@data.Coordinator</td>
+                                        <td>@data.ProductCategory</td>
+                                        <td>@data.ProductRefNo</td>
+                                        <td>@data.ProductDescription</td>
+                                        @*<td>@data.CompanyName</td>*@
+                                        <td>@data.OpeningDate</td>
+                                        <td>@data.ClosingDate</td>
+                                        <td>@data.CreatedDate.ToString("dd/MM/yyyy hh:mm tt")</td>
+                                        <td>@data.CreatedBy</td>
+                                        @*<td>@data.UpdatedDate.ToString("dd/MM/yyyy hh:mm tt")</td>
+        <td>@data.UpdatedBy</td>*@
+                                        @if (@data.Status == "Close")
+                                        {
+                                            <td style="text-align: center;"><span class="badge badge-success">@data.Status</span></td>
+                                        }
+                                        else
+                                        {
+                                            <td style="text-align: center;"><span class="badge badge-info">@data.Status</span></td>
+                                        }
+                                        @if (@data.ApprovalStatus == 0)
+                                        {
+                                            <td style="text-align: center;"><span class="badge badge-info">Open</span></td>
+                                        }
+                                        else if (@data.ApprovalStatus == 1)
+                                        {
+                                            <td style="text-align: center;"><span class="badge badge-info">Level 1</span></td>
+                                        }
+                                        else if (@data.ApprovalStatus == 2)
+                                        {
+                                            <td style="text-align: center;"><span class="badge badge-info">Level 2</span></td>
+                                        }
+                                        else if (@data.ApprovalStatus == 3)
+                                        {
+                                            <td style="text-align: center;"> <span class="badge badge-info">Level 3</span></td>
+                                        }
+                                        else if (@data.ApprovalStatus == 4)
+                                        {
+                                            <td style="text-align: center;"><span class="badge badge-info">Approved</span></td>
+                                        }
+                                        else if (@data.ApprovalStatus == 5)
+                                        {
+                                            <td style="text-align: center;"><span class="badge badge-success">Closed</span></td>
+                                        }
+                                        else
+                                        {
+                                            <td style="text-align: center;"></td>
+                                        }
+                                        <td>@data.UpdatedBy</td>
+                                        @if (Convert.ToInt16(Session["PPR_LoggedUserType"]) == 1)
+                                        {
+                                            <td style="width: 8%;">
+                                                @if (Convert.ToInt16(Session["PPR_LoggedUserType"]) == 1)
+                                                {
+                                                    <a href="@Url.Action("AddDevelopmentSheetImprovisation", "ProductProjectReport", new { ProjectID = @data.ProjectID })" class="btn btn-primary" title="Add"><span class="fa fa-angle-double-right"></span></a>
+                                                }
+                                                <a href="/DevelopmentSheet/GenerateExcel?ProjectID=@data.ProjectID" class="btn btn-info" title="Generate Excel"><span class="fa fa-file-excel-o"></span></a>
+                                            </td>
+                                        }
+
+
+
+                                        </tr>
+                                        }
+
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+}
+@*<script src="~/Content/js/sweetalert-dev.js"></script>*@
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script type="text/javascript">
+    function Confirm(title, event) {
+        var clientid = event.id;
+
+        var href = $('#' + clientid).attr('href');
+        var returnType = false;
+
+        swal({
+            title: "Warning",//"Are you sure?",
+            text: title,
+            //text: "You will not be able to recover this imaginary file!",
+            type: "info",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        },
+            function (isConfirm, id) {
+                if (isConfirm) {
+                    window.location.href = href;
+                    returnType = true;
+                    //swal("Deleted!", "Record has been deleted.", "success");
+                } else {
+                    //$('div').click();
+                    $('#' + clientid).blur();
+                    returnType = false;
+                }
+            }
+        );
+        return returnType;
+    }
+    $(document).ready(function () {
+        $('select').select2();
+    })
+    function Confirm_Forward(title, event, val) {
+        
+        var txt = '<i class="fa fa-angle-double-right"></i>';
+        if (val == 3) {
+            txt = 'Approve';
+        }
+        //if (val == 0) {
+        //    txt = '';
+        //}
+        //var clientid = event.id;
+        var href = event.href;
+        //var href = $('#' + clientid).attr('href');
+        var returnType = false;
+        if (val != 0) { }
+        Swal.fire({
+            title: title,
+            /*  text: title,*/
+            /* type: "info",*/
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: '<i class="fa fa-angle-double-left"></i>',
+            //cancelButtonText: "No",
+            //closeOnConfirm: true,
+            //closeOnCancel: true,
+            denyButtonText: txt,
+            denyButtonColor: "#5bb75b",
+            showDenyButton: true,
+        }).then((result) => {
+            debugger
+            if (result.isConfirmed) {
+                swal({
+                    title: "Warning",//"Are you sure?",
+                    text: 'Are you sure you want to Forward to Previous Level ?',
+                    //text: "You will not be able to recover this imaginary file!",
+                    type: "input",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    animation: "slide-from-top",
+                    inputPlaceholder: "Remark"
+                },
+                    function (inputValue, id) {
+                        if (inputValue === false)
+                            return false;
+
+                        if (inputValue === "") {
+                            swal.showInputError("You need to write something!");
+                            return false;
+                        }
+                        //if (isConfirm) {
+                        window.location.href = href + '&Type=Pre&Remark=' + inputValue;
+                        returnType = true;
+                        //} else {
+                        //    $('#' + clientid).blur();
+                        //    returnType = false;
+                        //}
+                    }
+                );
+            } else if (result.isDenied) {
+                window.location.href = href + '&Type=Next&Remark=' + '';
+                returnType = true;
+            }
+            else {
+
+                $('#' + clientid).blur();
+                returnType = false;
+            }
+        }
+        );
+        return returnType;
+    }
+    function Confirm_ForwardLevel0(title, event, val) {
+        
+        var txt = '<i class="fa fa-angle-double-right"></i>';
+        if (val == 3) {
+            txt = 'Approve';
+        }
+        //if (val == 0) {
+        //    txt = '';
+        //}
+        //var clientid = event.id;
+        var href = event.href;
+        //var href = $('#' + clientid).attr('href');
+        var returnType = false;
+        if (val != 0) { }
+        Swal.fire({
+            title: title,
+            showCancelButton: true,
+            confirmButtonColor: "#5bb75b",
+            confirmButtonText: txt,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = href + '&Type=Next&Remark=' + '';
+                returnType = true;
+            }
+            else {
+                $('#' + clientid).blur();
+                returnType = false;
+            }
+        }
+        );
+        return returnType;
+    }
+</script>
+<script src="~/Content/js/select2.min.js"></script>

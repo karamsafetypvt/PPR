@@ -1,0 +1,197 @@
+﻿@using PPRModel.Model
+@model ProductProjectReportModel
+@{
+    //ViewBag.Title = "Product Master";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+    int i = 0;
+}
+<style>
+    .tblrespoonsive {
+        overflow-x: auto;
+    }
+
+    .sweat-alert-inner .sa-icon .sa-warning .col-xs-3 .pulseWarning {
+        left: 10px !important;
+    }
+</style>
+<link href="~/Content/css/select2.css" rel="stylesheet" />
+<div class="widget-content nopadding tblrespoonsive">
+    <table class="table table-bordered data-table">
+        <thead>
+            <tr>
+                <th>Sr. No.</th>
+                <th>Forward for Approval</th>
+                <th style="display:none">ID</th>
+                <th>Project Title</th>
+                <th>Project No</th>
+                <th>Coordinator</th>
+                <th>Product Category</th>
+                <th>Product Ref. No.</th>
+                <th>Reference Image</th>
+                <th>Product Description</th>
+                <th>PPR For ?</th>
+                <th>Opening Date</th>
+                <th>Closing Date</th>
+                <th>Created Date</th>
+                <th>Created By</th>
+                @*<th>Updated Date</th>
+                    <th>Updated By</th>*@
+                <th>Status</th>
+                <th>Approval Status</th>
+                <th>Approved By</th>
+
+                @if (Convert.ToInt16(Session["PPR_LoggedUserType"]) == 1)
+                {
+                    <th>Action</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model._ProductProjectReportList != null)
+            {
+                foreach (var data in Model._ProductProjectReportList)
+                {
+                    <tr class="gradeX">
+                        <td>@(++i)</td>
+                        <td style="display:none">@data.ProjectID</td>
+                        <td class="center">
+                            @if ((Convert.ToInt16(Session["Level"]) == 0 || Convert.ToInt16(Session["DSLevel"]) == 0) && data.ApprovalStatus == 0)
+
+                            {
+
+                                <a href="/ProductProjectReport/ChangeProductStatus?Status=1&ProductID=@data.ProjectID"
+                                   class="btn btn-success"
+                                   id="Level_1"
+                                   title="Action"
+                                   onclick="return Confirm_ForwardLevel0('Are you sure you want to Forward To ?',this,0)">Action</a>
+                            }
+                            @if ((Convert.ToInt16(Session["Level"]) == 1 || Convert.ToInt16(Session["DSLevel"]) == 1) && data.ApprovalStatus == 1)
+                            {
+                                <a href="/ProductProjectReport/ChangeProductStatus?Status=2&ProductID=@data.ProjectID"
+                                   class="btn btn-success"
+                                   id="Level_2"
+                                   title="Action"
+                                   onclick="return Confirm_Forward('Are you sure you want to Forward To ?',this,1)">Action</a>
+                            }
+                            @if (Convert.ToInt16(Session["Level"]) == 2 && data.ApprovalStatus == 2)
+                            {
+                                <a href="/ProductProjectReport/ChangeProductStatus?Status=3&ProductID=@data.ProjectID"
+                                   class="btn btn-success"
+                                   id="Level_3"
+                                   title="Action"
+                                   onclick="return Confirm_Forward('Are you sure you want to Forward To ?',this,2)">Action</a>
+                            }
+                            @if ((Convert.ToInt16(Session["Level"]) == 3 && data.ApprovalStatus == 3) || (Convert.ToInt16(Session["DSLevel"]) == 2 && data.ApprovalStatus == 2))
+                            {
+                                <a href="/ProductProjectReport/ChangeProductStatus?Status=4&ProductID=@data.ProjectID"
+                                   class="btn btn-success"
+                                   id="Level_4"
+                                   title="Approve"
+                                   onclick="return Confirm_Forward('Are you sure you want to Approve?',this,3)">Approve</a>
+                            }
+                            @if ((Convert.ToString(Session["FP_LoggedUserName"]) == "Admin" || Convert.ToString(Session["FP_LoggedUserName"]) == "Admin_TPD") && data.ApprovalStatus == 4)
+                            {
+                                <a href="/ProductProjectReport/ChangeProductStatus?Status=5&ProductID=@data.ProjectID&Type=Next&Remark="
+                                   class="btn btn-primary"
+                                   id="Level_5"
+                                   title="Close"
+                                   onclick="return Confirm('Are you sure you want to Close?',this,4)">Close</a>
+                            }
+                        </td>
+                        <td>
+                            @data.ProjectTitle
+                        </td>
+                        <td><a href="/DesignDevelopmetPlan/DevelopmentPlan?ProjectID=@data.ProjectID" style="text-decoration:underline; color:darkblue;font-weight:bold" title="Open Development Plan"> @data.ProjectNO</a></td>
+
+                        @*<td>@data.ProjectNO</td>*@
+                        <td>@data.Coordinator</td>
+                        <td>@data.ProductCategory</td>
+                        <td>@data.ProductRefNo</td>
+                        @if (!string.IsNullOrEmpty(data.ImagePath))
+                        {
+                            <td>
+                                <img height="100" width="90" style="border:hidden;" src="@data.ImagePath" />
+                                <a href="javascript:void(0)" Onclick="Openpopup('@data.ImagePath')" style="margin-left: 16%;">Preview</a>
+                            </td>
+
+
+
+                        }
+                        else
+                        {
+
+                            <td><img height="100" width="90" style="border:hidden;" src="~/img/noimageicon.png" /></td>
+                        }
+
+                        <td>@data.ProductDescription</td>
+                        @if (data.PPR_For == "40")
+                        {
+                            <td>Textile Product Development</td>
+                        }
+                        else
+                        {
+                            <td>R&D</td>
+                        }
+
+
+                        <td>@data.OpeningDate</td>
+                        <td>@data.ClosingDate</td>
+                        <td>@data.CreatedDate.ToString("dd/MM/yyyy hh:mm tt")</td>
+                        <td>@data.CreatedBy</td>
+                        @if (@data.Status == "Close")
+                        {
+                            <td style="text-align: center;"><span class="badge badge-success">Closed</span></td>
+                        }
+                        else
+                        {
+                            <td style="text-align: center;"><span class="badge badge-info">@data.Status</span></td>
+                        }
+                        @if (@data.ApprovalStatus == 0)
+                        {
+                            <td style="text-align: center;"><span class="badge badge-info">Open</span></td>
+                        }
+                        else if (@data.ApprovalStatus == 1)
+                        {
+                            <td style="text-align: center;"><span class="badge badge-info">Level 1</span></td>
+                        }
+                        else if (@data.ApprovalStatus == 2)
+                        {
+                            <td style="text-align: center;"><span class="badge badge-info">Level 2</span></td>
+                        }
+                        else if (@data.ApprovalStatus == 3)
+                        {
+                            <td style="text-align: center;"> <span class="badge badge-info">Level 3</span></td>
+                        }
+                        else if (@data.ApprovalStatus == 4)
+                        {
+                            <td style="text-align: center;"><span class="badge badge-info">Approved</span></td>
+                        }
+                        else if (@data.ApprovalStatus == 5)
+                        {
+                            <td style="text-align: center;"><span class="badge badge-success">Closed</span></td>
+                        }
+                        else
+                        {
+                            <td style="text-align: center;"></td>
+                        }
+                        <td>@data.UpdatedBy</td>
+                        @if (Convert.ToInt16(Session["PPR_LoggedUserType"]) == 1)
+                        {
+                            <td style="width: 8%;">
+                                @if (@data.Status != "Close")
+                                {
+
+                                    <a href="@Url.Action("Edit", "ProductProjectReport", new { ProjectID = @data.ProjectID })" class="btn btn-primary" title="Edit"><span class="fa fa-pencil"></span></a>
+                                }
+                                <a class="btn btn-info" title="Generate Excel" onclick="GetReport(@data.ProjectID)"><span class="fa fa-file-excel-o"></span></a>
+                            </td>
+                        }
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+</div>
+
+

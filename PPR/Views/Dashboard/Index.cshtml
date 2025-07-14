@@ -1,0 +1,320 @@
+﻿@using PPRModel.Model
+@model DashBoardModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int i = 1;
+    int j = 1;
+    int k = 1;
+    int l = 1;
+    int m = 1;
+    int n = 1;
+}
+<style>
+    table.scrolldown {
+        width: 100%;
+        border-collapse: collapse;
+        border-spacing: 0;
+        border: 2px solid black;
+    }
+
+    /* To display the block as level element */
+    /* table.scrolldown tbody, table.scrolldown thead {
+            display:block;
+        }*/
+
+    thead tr th {
+        height: 60px;
+        line-height: 60px;
+    }
+
+    table.scrolldown tbody {
+        height: 150px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        display: block;
+    }
+
+    .quick-actions li {
+        background: #90ffc63b;
+    }
+</style>
+<div id="content-header">
+    @*<div id="breadcrumb"> <a href="index.html" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a></div>*@
+</div>
+<div class="container-fluid">
+    <div class="quick-actions_homepage">
+        <ul class="quick-actions">
+            <li>
+                <a href="~/Dashboard/Index"> <i class="icon-dashboard"></i> My Dashboard </a>
+            </li>
+            @*<li>
+                    <a href="Javascript:void(0)"> <i class="icon-cabinet"></i> PPR Level </a>
+                </li>
+                <li>
+                    <a href="Javascript:void(0)"> <i class="icon icon-wallet"></i> Development Level</a>
+                </li>*@
+            <li>
+                <a href="~/ProductProjectReport/Index"> <i class="icon icon-pdf"></i> PPR Sheet</a>
+            </li>
+            @*<li>
+                <a href="~/DevelopmentSheet/PPRList"> <i class="icon-calendar"></i>Development Sheet</a>
+            </li>*@
+        </ul>
+    </div>
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="accordion" id="collapse-group">
+                <div class="accordion-group widget-box">
+                    <div class="accordion-heading">
+                        <div class="widget-title">
+                            <a data-parent="#collapse-group" href="#collapseGOne" data-toggle="collapse">
+                                <span class="icon"><i class="icon-magnet"></i></span>
+                                <h5>Hard Goods Level</h5>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="collapse in accordion-body" id="collapseGOne">
+                        <div class="span4">
+                            <div class="widget-box">
+
+                                <div class="widget-content nopadding">
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="3">Level 1</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model._DashBoardModelList != null)
+                                            {
+                                                foreach (var leve1 in Model._DashBoardModelList)
+                                                {
+                                                    <tr class="odd gradeX">
+                                                        @if (leve1.Level == "1")
+                                                        {
+                                                            <td>@l</td>
+                                                            <td>
+                                                                @leve1.UserName
+                                                            </td>
+                                                            <td><span class="badge badge-info" style="margin-left: 60%;">@leve1.LevelOneCount</span></td>
+                                                            <input type="hidden" value="@(++i)" />
+                                                        }
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="span4">
+                            <div class="widget-box">
+
+                                <div class="widget-content nopadding">
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="3">Level 2</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model._DashBoardModelList != null)
+                                            {
+                                                foreach (var leve12 in Model._DashBoardModelList)
+                                                {
+                                                    <tr class="odd gradeX">
+                                                        @if (leve12.Level == "2")
+                                                        {
+                                                            <td>@m</td>
+                                                            <td>
+                                                                @leve12.UserName
+                                                            </td>
+                                                            <td>
+                                                                <span class="badge badge-info" style="margin-left: 53%;">@leve12.LevelTwoCount</span>
+                                                            </td>
+                                                            <input type="hidden" value="@(++j)" />
+
+                                                        }
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="span4">
+                            <div class="widget-box">
+                                <div class="widget-content nopadding">
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="3">Level 3</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model._DashBoardModelList != null)
+                                            {
+                                                foreach (var leve13 in Model._DashBoardModelList)
+
+                                                {
+                                                    <tr class="odd gradeX">
+                                                        @if (leve13.Level == "3")
+                                                        {
+                                                            <td>@n</td>
+                                                            <td>@leve13.UserName </td>
+                                                            <td><span class="badge badge-info" style="margin-left: 49%;">@leve13.LevelThreeCount</span></td>
+                                                            <input type="hidden" value="@(++k)" />
+
+                                                        }
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="accordion" id="collapse-group">
+                <div class="accordion-group widget-box">
+                    <div class="accordion-heading">
+                        <div class="widget-title">
+                            <a data-parent="#collapse-group" href="#collapseGOne" data-toggle="collapse">
+                                <span class="icon"><i class="icon-magnet"></i></span>
+                                <h5>Soft Goods Level</h5>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="collapse in accordion-body" id="collapseGOne">
+                        <div class="span4">
+                            <div class="widget-box">
+
+                                <div class="widget-content nopadding">
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="3">Level 1</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model._DevelopmentSheetLevelList != null)
+                                            {
+                                                foreach (var leve1 in Model._DevelopmentSheetLevelList)
+                                                {
+                                                    <tr class="odd gradeX">
+                                                        @if (leve1.Level == "1")
+                                                        {
+                                                            <td>@l</td>
+                                                            <td>
+                                                                @leve1.UserName 
+                                                            </td>
+                                                            <td>
+                                                                <span class="badge badge-info" style="margin-left: 60%;">@leve1.LevelOneCount</span>
+                                                            </td>
+                                                            <input type="hidden" value="@(++i)" />
+                                                        }
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="span4">
+                            <div class="widget-box">
+
+                                <div class="widget-content nopadding">
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="3">Level 2</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model._DevelopmentSheetLevelList != null)
+                                            {
+                                                foreach (var leve12 in Model._DevelopmentSheetLevelList)
+                                                {
+                                                    <tr class="odd gradeX">
+                                                        @if (leve12.Level == "2")
+                                                        {
+                                                            <td>@m</td>
+                                                            <td>
+                                                                @leve12.UserName 
+                                                            </td>
+                                                            <td><span class="badge badge-info" style="margin-left: 53%;">@leve12.LevelTwoCount</span></td>
+                                                            <input type="hidden" value="@(++j)" />
+
+                                                        }
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        @*<div class="span4">
+                            <div class="widget-box">
+                                <div class="widget-content nopadding">
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="3">Level 3</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model._DevelopmentSheetLevelList != null)
+                                            {
+                                                foreach (var leve13 in Model._DevelopmentSheetLevelList)
+
+                                                {
+                                                    <tr class="odd gradeX">
+                                                        @if (leve13.Level == "3")
+                                                        {
+                                                            <td>@n</td>
+                                                            <td>
+                                                                @leve13.UserName 
+                                                            </td>
+                                                            <td>
+                                                                <span class="badge badge-info" style="margin-left: 49%;">@leve13.LevelThreeCount</span>
+                                                            </td>
+                                                            <input type="hidden" value="@(++k)" />
+
+                                                        }
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*<script src="~/Content/js/jquery.min.js"></script>
+    <script src="~/Content/js/maruti.dashboard.js"></script>
+    <script src="~/Content/js/maruti.form_common.js"></script>*@

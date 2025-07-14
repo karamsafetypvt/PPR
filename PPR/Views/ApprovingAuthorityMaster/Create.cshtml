@@ -1,0 +1,11 @@
+﻿@using PPRModel.Model
+@model ApprovingAuthorityMasterModel
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using (Html.BeginForm("Create", "ApprovingAuthorityMaster", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    Html.RenderPartial("CreateOrEdit");
+}
+

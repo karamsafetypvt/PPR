@@ -1,0 +1,286 @@
+﻿@model PPRModel.Model.ProductProjectReportModel
+<style>
+    .form-horizontal .controls {
+        margin-left: 0px;
+    }
+
+    .form-horizontal .control-label {
+        padding-top: 15px;
+        width: 130px;
+        text-align: center;
+    }
+
+    .select2-container {
+        width: 52%;
+    }
+
+    .imgdiv {
+        margin-left: 35%
+    }
+
+    .control-label {
+        font-weight: bold;
+        text-align: left !important;
+    }
+
+    .table-condensed th, .table-condensed td {
+        padding: 4px 29px;
+    }
+</style>
+<link href="~/Content/css/select2.css" rel="stylesheet" />
+@if (Model != null)
+{
+    <div id="content-header">
+        <div id="breadcrumb">
+            @if (Model.ProjectID <= 0)
+            {
+                <a href="~/ProductProjectReport/Index" class="tip-bottom"><i class="icon-home"></i>Project Master</a>
+                <a href="~/ProductProjectReport/Create">Add New Project</a>
+
+            }
+            else
+            {
+                <a href="~/ProductProjectReport/Index" class="tip-bottom"><i class="icon-home"></i>Project Master</a>
+                <a href="~/ProductProjectReport/Edit">Edit Project</a>
+                
+            }
+           
+        </div>
+        @if (Model.ProjectID <= 0)
+        {
+            <h1>Add New Project</h1>
+        }
+        else
+        {
+            <h1>Edit Project</h1>
+        }
+
+    </div>
+
+    <div class="container-fluid content">
+        <div class="row-fluid">
+
+            <div class="span12">
+                <div class="widget-box">
+                    @if (Model.ProjectID <= 0)
+                    {
+
+
+                        <div class="widget-title">
+                            <span class="icon">
+                                <i class="icon-info-sign"></i>
+                            </span>
+                            <h5>Add</h5>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="widget-title">
+                            <span class="icon">
+                                <i class="icon-info-sign"></i>
+                            </span>
+                            <h5>Edit</h5>
+                        </div>
+                    }
+
+                    <div class="widget-content nopadding">
+                        <div class="form-horizontal">
+                            <table class="table table table-condensed ">
+                                <thead>
+
+                                </thead>
+                                <tbody>
+                                    <tr class="odd gradeX">
+                                        <td>
+                                            <label class="control-label">Project Title</label>
+                                            <div class="controls">
+                                                @Html.TextBoxFor(m => m.ProjectTitle, new { @class = "form-control m-input", id = "Projecttitle", @Placeholder = "Project Title" })
+                                                @Html.HiddenFor(m => m.ProjectID)
+                                                @Html.ValidationMessageFor(m => m.ProjectTitle, "", new { @class = "m-form__help" })
+                                            </div>
+
+                                        </td>
+                                        <td>
+                                            <label class="control-label">Project No</label>
+                                            <div class="controls">
+                                                @Html.TextBoxFor(m => m.ProjectNO, new { @class = "form-control", @Placeholder = "Project Number", @Readonly = "Readonly" })
+                                               
+                                                @Html.ValidationMessageFor(m => m.ProjectNO, "", new { @class = "m-form__help" })
+                                            </div>
+
+                                        </td>
+                                        <td>
+                                            <label class="control-label">Coordinator</label>
+                                            <div class="controls">
+                                                @Html.DropDownListFor(m => m.Coordinator, Model._CoordinatorList, new { @class = "required", id = "ddlCoordinator", @style = "width:220px" })
+                                                @Html.ValidationMessageFor(m => m.Coordinator, "", new { @class = "m-form__help" })
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                    <tr class="odd gradeX">
+
+                                        <td>
+                                            <label class="control-label">Product Category</label>
+                                            <div class="controls">
+                                                @Html.DropDownListFor(m => m.ProductCategory, Model._ProductCategoryList, new { @class = "required", id = "ddlCategory", @style = "width:220px" })
+                                            </div>
+                                            @Html.ValidationMessageFor(m => m.ProductCategory, "", new { @class = "m-form__help" })
+                                        </td>
+                                        <td>
+                                            <label class="control-label">Product Ref. No.</label>
+                                            <div class="controls">
+                                                @Html.TextBoxFor(m => m.ProductRefNo, new { @class = "form-control m-input", @Placeholder = "Product Ref. No." })
+
+                                            </div>
+                                            @Html.ValidationMessageFor(m => m.ProductRefNo, "", new { @class = "m-form__help" })
+                                        </td>
+                                        <td>
+                                            <label class="control-label">Product Description</label>
+                                            <div class="controls">
+                                                @Html.TextBoxFor(m => m.ProductDescription, new { @class = "form-control m-input", @Placeholder = "Product Description" })
+
+                                            </div>
+                                            @Html.ValidationMessageFor(m => m.ProductDescription, "", new { @class = "m-form__help" })
+                                        </td>
+                                    </tr>
+                                    <tr class="odd gradeX">
+                                        <td>
+                                            <label class="control-label">Reference Image</label>
+                                            <div class="controls">
+                                                @Html.TextBoxFor(m => m.RefrenceImage, new { @type = "file", @onchange = "show(this)", @class = "form-control m-input", @id = "file1" })
+                                                @Html.HiddenFor(m => m.ImagePath)
+                                            </div>
+                                            <div class="imgdiv"><img id="user_img" height="100" width="90" style="border: hidden; display: none" /></div>
+                                            <span class="m-form__help" id="imgextension"></span>
+                                            @if (!String.IsNullOrEmpty(Model.ImagePath))
+                                            {
+                                                <div class="imgdiv imgdiv1"><img id="user_img1" height="100" width="90" style="border:hidden;display:block" src="@Model.ImagePath" /></div>
+                                            }
+                                        </td>
+                                        <td>
+                                            <label class="control-label">Opening Date</label>
+                                            <div class="controls">
+                                                
+                                                @Html.TextBoxFor(m => m.OpeningDate, new { @class = "required form-control", @Placeholder = "Opening Date", @id = "txtOpeningDate", @type = "date" })
+                                               
+                                            </div>
+                                            @Html.ValidationMessageFor(m => m.OpeningDate, "", new { @class = "m-form__help" })
+                                        </td>
+
+                                        <td>
+                                            @if (Model.ProjectID > 0)
+                                            {
+                                                <label class="control-label">Closing Date</label>
+                                                <div class="controls">
+
+                                                    @Html.TextBoxFor(m => m.ClosingDate, new { @class = "form-control m-input", @Placeholder = "Closing Date", @id = "txtClosingDate", @type = "date" })
+
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                
+                                            }
+                                        </td>
+
+
+                                    </tr>
+
+                                    <tr class="odd gradeX">
+                                        <td>
+                                            @if (Model.ProjectID > 0)
+                                            {
+                                                <label class="control-label">Status</label>
+                                                <div class="controls">
+                                                    @Html.DropDownListFor(m => m.Status, Model._StatusList, new { @class = "required", id = "ddltStatus", @style = "width:220px" })
+                                                </div>
+                                                @Html.ValidationMessageFor(m => m.Status, "", new { @class = "m-form__help" })
+                                            }
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="form-actions" style="text-align: center;padding-left:0px">
+                                <a href="~/ProductProjectReport/Index" class="btn btn-danger">Cancel</a>
+                                <a href="JavaScript:void(0);" class="btn btn-primary" onclick="Reset();">Reset</a>
+                                @if (Model.ProjectID == 0)
+                                {
+                                    <button type="submit" class="btn btn-success">Save</button>
+                                }
+                                else
+                                {
+                                    <button type="submit" class="btn btn-info">Update</button>
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script src="~/Content/js/select2.min.js"></script>
+
+<script type="text/javascript">
+    function Reset() {
+
+        //$("#ddltStatus").val(0).select2();
+        $("#ddltStatus").val(0);
+        $("#ddlCoordinator").val('');
+        $("#ddlCategory").val('');
+        $('.m-input').val('');
+        var inputs = document.querySelectorAll('.chkppr');
+        for (var i = 0; i < inputs.length; i++) {
+
+            inputs[i].checked = false;
+        }
+       
+    }
+    function show(input) {
+
+        var img = $('#user_img1').attr('src');
+        if (img != null);
+        {
+           
+            $('.imgdiv1').hide();
+        }
+        if (input.files && input.files[0]) {
+            debugger;
+            var filerdr = new FileReader();
+            filerdr.onload = function (e) {
+                debugger;
+                $('#user_img').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(input.files[0]);
+            debugger;
+            fileName = $('#file1').val();
+            extension = fileName.split('.').pop();
+            if (extension == ".Jpg" || extension == "png" || extension == "jpg" || extension == "jpeg") {
+                $('#imgextension').text('');
+                $('#user_img').show();
+            }
+            else {
+                $('#imgextension').text('Only.jpeg,.jpg,.png format.');
+                $('#user_img').hide();
+                return false;
+            }
+        }
+    }
+</script>
+<script>
+    $(document).ready(function () {
+      
+        $("#Status").val('1'); 
+        if(@Model.ProjectID==0)
+        {
+        $('#txtOpeningDate').val('@DateTime.Now.ToString("dd-MM-yyyy")');
+        }
+        $('#txtClosingDate').val('@DateTime.Now.ToString("dd-MM-yyyy")');
+    })
+</script>
+

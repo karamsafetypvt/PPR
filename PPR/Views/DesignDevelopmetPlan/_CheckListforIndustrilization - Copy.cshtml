@@ -1,0 +1,402 @@
+﻿@using PPRModel.Model
+@model IndustrialisationModel
+<style>
+    .form-horizontal .controls {
+        margin-left: 544px;
+        padding: 10px 0;
+    }
+
+    .form-horizontal .control-label {
+        padding-top: 15px;
+        width: auto;
+        padding-left: 30px;
+    }
+
+    .control-label {
+        font-weight: bold
+    }
+
+    .m-form__help {
+        font-weight: 500 !important;
+        display: inline-block;
+        margin-left: 44%;
+        color: red;
+    }
+
+    .m-form__help1 {
+        font-weight: 500 !important;
+        display: inline-block;
+        color: red;
+    }
+</style>
+<link href="~/Content/css/uniform.css" rel="stylesheet" />
+<div class="row-fluid">
+    <div class="span12">
+
+        @using (Html.BeginForm("SaveInduatrilisationDataSheet", "DesignDevelopmetPlan", FormMethod.Post, new { id = "form_validation", @class = "form-horizontal", enctype = "multipart/form-data" }))
+        {
+            <div class="widget-box">
+                <div class="widget-title">
+                    <span class="icon"> <i class="icon-align-justify"></i> </span>
+                    <h5>CheckList For Induatrilisation</h5>
+                </div>
+                <div class="widget-content nopadding">
+                    <div class="control-group">
+                        <label class="control-label">Date :</label>
+                        <div data-date="@DateTime.Now.ToString("MM-dd-yyyy")" class="input-append date datepicker " data-date-format="mm-dd-yyyy">
+                            @Html.TextBoxFor(m => m.INDUSTRIALISATIONDate, new { @class = "span11", @Placeholder = "Date Of Sample Sent", type = "Date" })
+                            @*<span class="add-on"><i class="icon-th"></i></span>*@
+                        </div>
+                        @Html.ValidationMessageFor(m => m.INDUSTRIALISATIONDate, "", new { @class = "m-form__help1" })
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">PROJECT NO :</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.ProjectNO, new { @Class = "from-control span11", @Disabled = "Disabled" })
+                            @Html.HiddenFor(m => m.ProjectID, new { @Class = "from-control span11" })
+                            @Html.HiddenFor(m => m.PlanID, new { @Class = "from-control span11" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Additional Mechine Required :</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.ADDITIONALMACHINESREQUIRED, new { @Class = "from-control span11" })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.ADDITIONALMACHINESREQUIRED, "", new { @class = "m-form__help" })
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">JIG/Fixtures/Tools New : </label>
+
+                        
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.QUALITYPLAN_DOCUMENTS, new { @Class = "from-control span11", @type = "File" })
+                            @Html.HiddenFor(m => m.QUALITYPLAN_DOCUMENTSPATH)
+                            @Html.HiddenFor(m => m.JIGFIXTURESTOOLSNew)
+                            <a href="@Model.QUALITYPLAN_DOCUMENTSPATH" target="_blank" rel="noopener">@Model.JIGFIXTURESTOOLSNew</a>
+                            @*@Html.TextBoxFor(m => m.JIGFIXTURESTOOLSNew, new { @Class = "from-control span11" })*@
+                        </div>
+                        @*@Html.ValidationMessageFor(m => m.JIGFIXTURESTOOLSNew, "", new { @class = "m-form__help" })*@
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Modification In Old :</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.MODIFICATIONINOLD, new { @Class = "from-control span11" })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.MODIFICATIONINOLD, "", new { @class = "m-form__help" })
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Additional Test Equipment Required :</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.ADDITIONALTESTEQUIPMENTREQUIRED, new { @Class = "from-control span11" })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.ADDITIONALTESTEQUIPMENTREQUIRED, "", new { @class = "m-form__help" })
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Change In ISO Document(If Any)  </label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.CHANGEINISODOCUMENT, new { @Class = "from-control span11" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Update In ERP System (If Any) </label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.UPDATIONINERPSYSTEMS, new { @Class = "from-control span11" })
+
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">Planning Of Component Development</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.PLANNINGOFCOMPONENTDEVELOPMENT, new { @Class = "from-control span11" })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.PLANNINGOFCOMPONENTDEVELOPMENT, "", new { @class = "m-form__help" })
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Quality Plan</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.QUALITYPLAN, new { @Class = "from-control span11" })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.QUALITYPLAN, "", new { @class = "m-form__help" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <h4 style="margin-left:43%;">Details Of Components</h4>
+            <br />
+
+            <table>
+                <tfoot>
+                    <tr>
+                        <td>
+                            <label style="font-weight:bold;">DRG.NO.</label>
+                            <input type="text" id="txtDRGNO" class="from-control span11" />
+                        </td>
+                        <td>
+                            <label style="font-weight:bold;">Title</label>
+                            <input type="text" id="txTitle" class="from-control span11" />
+                        </td>
+                        <td>
+                            <label style="font-weight:bold;">QTY</label>
+                            <input type="text" id="txtQuantity" class="from-control span11" onkeypress="return isNumberKey(event,this)" />
+                        </td>
+                        <td>
+                            <label style="font-weight:bold;">Status</label>
+                            <input type="text" id="txtComponentStatus" class="from-control span11" />
+                        </td>
+                        <td>
+                            <label style="font-weight:bold;">Inhouse</label>
+                            <input type="text" id="txtInhouse" class="from-control span11" />
+                        </td>
+                        <td>
+                            <label style="font-weight:bold;">Outside</label>
+                            <input type="text" id="txtOutside" class="from-control span11" />
+                        </td>
+                        <td>
+                            <label style="font-weight:bold;">Tootlig Status(If Req)</label>
+                            <input type="text" id="txtToolingStatus" class="from-control span11" />
+                        </td>
+                        <td>
+                            <br />
+                            @if (Model.PPR_Status != "3")
+                            {
+                                <a href="javascript:void(0);" class="btn btn-primary" id="addnewrow" title="Add"><span>Add</span></a>
+                            }
+
+                        </td>
+                    </tr>
+
+                </tfoot>
+            </table>
+            <br />
+
+            <div class="widget-box">
+                <div class="widget-content nopadding">
+                    <table class="table table-bordered table-striped" id="tblParticipantList">
+                        <thead>
+                            <tr>
+
+                                <th>DRG.NO.</th>
+                                <th>Title</th>
+                                <th>QTY</th>
+                                <th>Status</th>
+                                <th>Inhouse</th>
+                                <th>Outside</th>
+                                <th>Tootlig Status (If Required)</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model._detailofcomponent != null)
+                            {
+                                for (int i = 0; i < Model._detailofcomponent.Count; i++)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div>
+                                                @Html.TextBoxFor(m => m._detailofcomponent[i].DRGNO, new { @Class = "from-control span11 req1", id = "ListMetaDatas_" + i + "__TRAINNING_ID" })
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                @Html.TextBoxFor(m => m._detailofcomponent[i].Title, new { @Class = "from-control span11 req2" })
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                @Html.TextBoxFor(m => m._detailofcomponent[i].Quantity, new { @Class = "from-control span11 req3", @onkeypress = "return isNumberKey(event,this)" })
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                @Html.TextBoxFor(m => m._detailofcomponent[i].ComponentStatus, new { @Class = "from-control span11 req4" })
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                @Html.TextBoxFor(m => m._detailofcomponent[i].Inhouse, new { @Class = "from-control span11 req5" })
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                @Html.TextBoxFor(m => m._detailofcomponent[i].Outside, new { @Class = "from-control span11 req6" })
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                @Html.TextBoxFor(m => m._detailofcomponent[i].ToolingStatus, new { @Class = "from-control span11" })
+                                            </div>
+                                        </td>
+                                        @*<td>
+                                            <a href="javascript:void(0);" class="btn btn-primary" id="addnewrow" title="Add"><span class="fa fa-plus"></span></a></td>*@
+                                        <td>
+                                            @if (Model.PPR_Status != "3")
+                                            {
+                                                <a href="javascript:void(0);" class="btn btn-danger" id="delete" onclick='Remove(this)'>Remove</a>
+                                            }
+                                        </td>
+
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+
+                    </table>
+
+                    <br />
+                    <br />
+                    @*<table class="table">
+                        <tr>
+                            <td>
+                                <label class="control-label text-center">
+                                    Prepared By
+                                    <br />
+                                    Sr. Section Officer (R&D)
+                                </label>
+                            </td>
+                            <td>
+                                <label class="control-label text-center">
+                                    Checked By
+                                    <br />
+                                    Principal Lead (R&D)
+                                </label>
+                            </td>
+                            <td>
+                                <label class="control-label text-center">
+                                    Reviewd By<br />
+                                    AGM (R&D)
+                                </label>
+                            </td>
+                            <td>
+                                <label class="control-label text-center">
+                                    Approved By<br />
+                                    HOD (R&D)
+                                </label>
+                            </td>
+                        </tr>
+                    </table>*@
+                    @if (Model.PPR_Status != "3")
+                    {
+                        <div class="form-actions" style="text-align: center;padding-left:0px">
+                            @*<button type="button" >Canceclass="btn btn-danger"l</button>*@
+                            <a href="~/DesignDevelopmetPlan/DevelopmentPlan?ProjectID=@Model.ProjectID" class="btn btn-danger">Cancel</a>
+                            <button type="submit" class="btn btn-success" id="btnSave">Save & Update</button>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+<script src="~/Content/js/jquery.uniform.js"></script>
+
+<script type="text/javascript">
+    /* $("body").on("click", "#addnewrow", function () {*/
+    $("#addnewrow").on("click", function () {
+
+        //Reference the Name and Country TextBoxes.
+        var txtDRGNO = $("#txtDRGNO");
+        var txTitle = $("#txTitle");
+        var txtQuantity = $("#txtQuantity");
+        var txtComponentStatus = $("#txtComponentStatus");
+        var txtInhouse = $("#txtInhouse");
+        var txtOutside = $("#txtOutside");
+        var txtToolingStatus = $("#txtToolingStatus");
+        var rowcount = $("#tblParticipantList > tbody > tr").length;
+        /*var name1 = "IsdustrialisationModel[" + rowcount + "].DRGNO";*/
+        var name1 = "_detailofcomponent[" + rowcount + "].DRGNO";
+        var name2 = "_detailofcomponent[" + rowcount + "].Title";
+        var name3 = "_detailofcomponent[" + rowcount + "].Quantity";
+        var name4 = "_detailofcomponent[" + rowcount + "].ComponentStatus";
+        var name5 = "_detailofcomponent[" + rowcount + "].Inhouse";
+        var name6 = "_detailofcomponent[" + rowcount + "].Outside";
+        var name7 = "_detailofcomponent[" + rowcount + "].ToolingStatus";
+
+        var textbox = $("<tr><td><input class='from-control span11 req1' type='text' value='" + txtDRGNO.val() + "' name='" + name1 + "'></td >"
+            + "<td><input type='text' class='from-control span11 req2' value='" + txTitle.val() + "' name='" + name2 + "'></td >"
+            + "<td><input type='text' class='from-control span11 req3' onkeypress = 'return isNumberKey(event, this)' value='" + txtQuantity.val() + "' name='" + name3 + "'></td >"
+            + "<td><input type='text' class='from-control span11 req4' value='" + txtComponentStatus.val() + "' name='" + name4 + "'></td >"
+            + "<td><input type='text' class='from-control span11 req5' value='" + txtInhouse.val() + "' name='" + name5 + "'></td >"
+            + "<td><input type='text' class='from-control span11 req6' value='" + txtOutside.val() + "' name='" + name6 + "'></td >"
+            + "<td><input type='text' class='from-control span11' value='" + txtToolingStatus.val() + "' name='" + name7 + "'></td >"
+            + "<td><input type='button' class='btn btn-danger' value='Remove' onclick='Remove(this);'></td >"
+            + "</tr > ");
+        $("#tblParticipantList tbody").append(textbox);
+
+        //Clear the TextBoxes.
+        txtDRGNO.val("");
+        txTitle.val("");
+        txtQuantity.val("");
+        txtComponentStatus.val("")
+        txtInhouse.val("");
+        txtOutside.val("");
+        txtToolingStatus.val("");
+    });
+
+
+    function Remove(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("tr");
+        var name = $("td", row).eq(0).html();
+        if (confirm("Do you want to delete selected row.")) {
+            //Get the reference of the Table.
+            var table = $("#tblParticipantList")[0];
+
+            //Delete the Table row using it's Index.
+            table.deleteRow(row[0].rowIndex);
+        }
+    };
+</script>
+<script type="text/javascript">
+
+    $("#btnSave").click(function () {
+        var flag = false
+        $("#tblParticipantList tbody tr").each(function () {
+            if ($(this).find('.req1').val() == "" || $(this).find('.req1').val() == null) {
+                $(this).find('.req1').css("border", "1px solid red");
+                flag = true;
+            } else {
+                $(this).find('.req1').css("border", "1px solid lightgray");
+            }
+            if ($(this).find('.req2').val() == "" || $(this).find('.req2').val() == null) {
+                $(this).find('.req2').css("border", "1px solid red");
+                flag = true;
+            } else {
+                $(this).find('.req2').css("border", "1px solid lightgray");
+            }
+            if ($(this).find('.req3').val() == "" || $(this).find('.req3').val() == null) {
+                $(this).find('.req3').css("border", "1px solid red");
+                flag = true;
+            } else {
+                $(this).find('.req3').css("border", "1px solid lightgray");
+            }
+            if ($(this).find('.req4').val() == "" || $(this).find('.req4').val() == null) {
+                $(this).find('.req4').css("border", "1px solid red");
+                flag = true;
+            } else {
+                $(this).find('.req4').css("border", "1px solid lightgray");
+            }
+            //if ($(this).find('.req5').val() == "" || $(this).find('.req6').val() == null) {
+            //    $(this).find('.req5').css("border", "1px solid red");
+            //    flag = true;
+            //} else {
+            //    $(this).find('.req5').css("border", "1px solid lightgray");
+            //}
+            //if ($(this).find('.req6').val() == "" || $(this).find('.req6').val() == null) {
+            //    $(this).find('.req6').css("border", "1px solid red");
+            //    flag = true;
+            //} else {
+            //    $(this).find('.req6').css("border", "1px solid lightgray");
+            //}
+        })
+        if (flag) {
+            return false;
+        }
+    })
+</script>
+<script src="~/CustomJS/Utility.js"></script>
+<script src="~/Scripts/jquery-ui.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>

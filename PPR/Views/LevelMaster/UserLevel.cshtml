@@ -1,0 +1,274 @@
+﻿@using PPRModel.Model
+@model LevelMasteranDesignMasterModel
+@{
+    ViewBag.Title = "UserLevel";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Content/css/select2.css" rel="stylesheet" />
+<div id="content-header">
+    <div id="breadcrumb">
+        <a href="#" title="Go to Home" class="tip-bottom"><i class="icon-home"></i>Level Master</a>
+        <a href="#">Set Level</a>
+    </div>
+    <h1>Set User Level</h1>
+</div>
+<div class="container-fluid content">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="widget-box">
+                @*<div class="widget-title">
+                        <span class="icon">
+                            <i class="icon-info-sign"></i>
+                        </span>
+                        <h5>Add</h5>
+                    </div>*@
+                <div class="widget-content nopadding">
+                    <div class="form-horizontal">
+                        <div class="row-fluid">
+                            @if (Session["Dept_ID"].ToString() == "37")
+                            {
+                                <div class="span6 spn1">
+                                    <div class="widget-box">
+                                        <div class="widget-title">
+                                            <span class="icon"> <i class="icon-align-justify"></i> </span>
+                                            <h5>PPR Level for Hard Goods </h5>
+                                        </div>
+                                        <div class="widget-content nopadding">
+                                            <form action="#" method="get" class="form-horizontal">
+                                                <div class="control-group">
+                                                    <label class="control-label">Level 1 :</label>
+                                                    <div class="controls">
+                                                        @Html.DropDownListFor(m => m.PPRLevel1Ids, Model._PPRUserLevel1List, new { @class = "listbox", @id = "PPRLevel1Ids" })
+                                                    </div>
+                                                </div>
+                                                <div class="control-group">
+                                                    <label class="control-label">Level 2 :</label>
+                                                    <div class="controls">
+                                                        @Html.DropDownListFor(m => m.PPRLevel2Ids, Model._PPRUserLevel2List, new { @class = "listbox", @id = "PPRLevel2Ids" })
+                                                    </div>
+                                                </div>
+                                                <div class="control-group">
+                                                    <label class="control-label">Level 3 :</label>
+                                                    <div class="controls">
+                                                        @Html.DropDownListFor(m => m.PPRLevel3Ids, Model._PPRUserLevel3List, new { @class = "listbox", @id = "PPRLevel3Ids" })
+                                                    </div>
+                                                </div>
+                                                <div class="form-actions">
+                                                    <button type="button" class="btn btn-success" id="btnpprlevel">Save</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            @if (Session["Dept_ID"].ToString() == "40")
+                            {
+                                <div class="span6 spn2">
+                                    <div class="widget-box">
+                                        <div class="widget-title">
+                                            <span class="icon"> <i class="icon-align-justify"></i> </span>
+                                            <h5>PPR Level for Soft Goods </h5>
+                                        </div>
+                                        <div class="widget-content nopadding">
+                                            <form action="#" method="get" class="form-horizontal">
+                                                <div class="control-group">
+                                                    <label class="control-label">Level 1 :</label>
+                                                    <div class="controls">
+                                                        @Html.DropDownListFor(m => m.Developmentsheet1Ids, Model._DevelopmentsheetUserLevel1List, new { @class = "listbox", @id = "Developmentsheet1Ids" })
+                                                    </div>
+                                                </div>
+                                                <div class="control-group">
+                                                    <label class="control-label">Level 2 :</label>
+                                                    <div class="controls">
+                                                        @Html.DropDownListFor(m => m.Developmentsheet2Ids, Model._DevelopmentsheetUserLevel2List, new { @class = "listbox", @id = "Developmentsheet2Ids" })
+                                                    </div>
+                                                </div>
+                                                <!--<div class="control-group" style="display:none">
+                            <label class="control-label">Level 3 :</label>
+                            <div class="controls">-->
+                                                @*@Html.ListBoxFor(m => m.Developmentsheet3Ids, new MultiSelectList(Model.DevelopmentsheetUserLevel3, "Value", "Text"), new { @class = "listbox" })*@
+                                                <!--@Html.DropDownListFor(m => m.Developmentsheet3Ids, Model._DevelopmentsheetUserLevel3List, new { @class = "listbox", @id = "Developmentsheet3Ids" })
+                            </div>
+                        </div>-->
+                                                <div class="form-actions">
+                                                    <button type="button" class="btn btn-success" id="btndevelopsheet">Save</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            </div>
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*<script src="~/Content/js/jquery.min.js"></script>*@
+@*<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>*@
+@*<link href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.3/css/bootstrap.min.css"
+      rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<link href="http://cdn.rawgit.com/davidstutz/bootstrap-multiselect/master/dist/css/bootstrap-multiselect.css"
+      rel="stylesheet" type="text/css" />
+<script src="http://cdn.rawgit.com/davidstutz/bootstrap-multiselect/master/dist/js/bootstrap-multiselect.js"
+        type="text/javascript"></script>*@
+
+<script type="text/javascript">
+    $('#btnpprlevel').click(function () {
+        var PPRLevel1Ids = new Array();
+        var PPRLevel2Ids = new Array();
+        var PPRLevel3Ids = new Array();
+        var PPRLevel1Id = {};
+        var PPRLevel2Id = {};
+        var PPRLevel3Id = {};
+        PPRLevel1Id = $('#PPRLevel1Ids').val();
+        PPRLevel2Id = $('#PPRLevel2Ids').val();
+        PPRLevel3Id = $('#PPRLevel3Ids').val();
+        PPRLevel1Ids.push(PPRLevel1Id);
+        PPRLevel2Ids.push(PPRLevel2Id);
+        PPRLevel3Ids.push(PPRLevel3Id);
+        $.ajax({
+            type: "POST",
+            url: '/LevelMaster/UserLevel?PPRLevel1Ids=' + PPRLevel1Ids + '&PPRLevel2Ids=' + PPRLevel2Ids + '&PPRLevel3Ids=' + PPRLevel3Ids,
+            //data: JSON.stringify(PPRLevel1Ids),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (r) {
+                if (r.ReturnCode == 11) {
+                    swal({ title: 'Success', text: 'Data Saved Successfully', type: 'success' });
+                }
+            }
+        });
+    })
+
+    $('#btndevelopsheet').click(function () {
+        var Developmentsheet1Ids = new Array();
+        var Developmentsheet2Ids = new Array();
+        var Developmentsheet3Ids = new Array();
+        var Developmentsheet1Id = {};
+        var Developmentsheet2Id = {};
+        var Developmentsheet3Id = {};
+        Developmentsheet1Id = $('#Developmentsheet1Ids').val();
+        Developmentsheet2Id = $('#Developmentsheet2Ids').val();
+        Developmentsheet3Id = $('#Developmentsheet3Ids').val();
+        Developmentsheet1Ids.push(Developmentsheet1Id);
+        Developmentsheet2Ids.push(Developmentsheet2Id);
+        Developmentsheet3Ids.push(Developmentsheet3Id);
+        $.ajax({
+            type: "POST",
+            url: '/LevelMaster/DevelopmentsheetLevel?Developmentsheet1Ids=' + Developmentsheet1Ids + '&Developmentsheet2Ids=' + Developmentsheet2Ids + '&Developmentsheet3Ids=' + Developmentsheet3Ids,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (r) {
+                if (r.ReturnCode == 11) {
+                    swal({ title: 'Success', text: 'Data Saved Successfully', type: 'success' });
+                }
+            }
+        });
+    })
+    $(document).ready(function () {
+        $('select').select2();
+        @*var dept = parseInt('@Session["Dept_ID"]');
+        $(".spn1").show();
+        $(".spn2").show();
+        if (dept == 37) {
+            $(".spn1").hide();
+        } else {
+            $(".spn2").hide();
+        }*@
+       
+        $.ajax({
+            type: "Get",
+            url: '/LevelMaster/SelectedUserLevels',
+
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (r) {
+
+                var Levelstring1 = r.PPRLevel1Ids;
+                var Levelstring2 = r.PPRLevel2Ids;
+                var Levelstring3 = r.PPRLevel3Ids;
+                if (Levelstring1 != null) {
+
+                    var Level1 = Levelstring1.split(',');
+                }
+                if (Levelstring2 != null) {
+
+                    var Level2 = Levelstring2.split(',');
+
+                }
+                if (Levelstring3 != null) {
+
+                    var Level3 = Levelstring3.split(',');
+
+                }
+                if (Level1 != null) {
+                    $("#PPRLevel1Ids").val(Level1);
+                }
+                if (Level2 != null) {
+                    $("#PPRLevel2Ids").val(Level2);
+                }
+                if (Level3 != null) {
+                    $("#PPRLevel3Ids").val(Level3);
+                }
+
+                $("#PPRLevel1Ids").trigger("change");
+                $("#PPRLevel2Ids").trigger("change");
+                $("#PPRLevel3Ids").trigger("change");
+
+            }
+        })
+        $.ajax({
+            type: "Get",
+            url: '/LevelMaster/SelectedDevelopmentsheetLevel',
+
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (r) {
+
+                var SheetLevel1 = r.Developmentsheet1Ids;
+                var SheetLevel2 = r.Developmentsheet2Ids;
+                var SheetLevel3 = r.Developmentsheet3Ids;
+                if (SheetLevel1 != null) {
+                    var Sheet1 = SheetLevel1.split(',');
+                }
+                if (SheetLevel2 != null) {
+                    var Sheet2 = SheetLevel2.split(',');
+                }
+                if (SheetLevel3 != null) {
+                    var Sheet3 = SheetLevel3.split(',');
+                }
+                if (Sheet1 != null) {
+
+                    $("#Developmentsheet1Ids").val(Sheet1);
+                }
+                if (Sheet2 != null) {
+
+                    $("#Developmentsheet2Ids").val(Sheet2);
+                }
+                if (Sheet3 != null) {
+
+                    $("#Developmentsheet3Ids").val(Sheet3);
+                }
+                $("#Developmentsheet1Ids").trigger("change");
+                $("#Developmentsheet2Ids").trigger("change");
+                $("#Developmentsheet3Ids").trigger("change");
+            }
+        })
+    });
+</script>
+<script src="~/Content/js/select2.min.js"></script>
+@*<script type="text/javascript">
+        $(function () {
+            $('.listbox').multiselect({
+                includeSelectAllOption: true
+            });
+        });
+    </script>*@

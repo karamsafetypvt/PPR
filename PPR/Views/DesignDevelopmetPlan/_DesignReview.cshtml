@@ -1,0 +1,348 @@
+﻿@using PPRModel.Model
+@model DesignReviewModel
+<style>
+    .form-horizontal .controls {
+        margin-left: 50px !important;
+    }
+
+    .control-label {
+        font-weight: bold
+    }
+</style>
+<link href="~/Content/css/sweetalert.css" rel="stylesheet" />
+<div class="row-fluid">
+    <div class="span12">
+
+        <div class="widget-box">
+            <div class="widget-title">
+                <span class="icon"><i class="icon-th"></i></span>
+                <h5>Design Review</h5>
+            </div>
+            @using (Html.BeginForm("SaveDesignReview", "DesignDevelopmetPlan", FormMethod.Post, new { id = "form_validation", @class = "form-horizontal", enctype = "multipart/form-data" }))
+            {
+                <div class="widget-content nopadding">
+                    <div class="form-horizontal">
+                        <table class="table table table-condensed ">
+                            <thead>
+
+                            </thead>
+                            <tbody>
+                                <tr class="odd gradeX">
+                                    <td>
+                                        <label>
+                                            <b>PROJECT NO</b> : <span>
+                                                @Html.DisplayFor(m => m.ProjectNO)
+                                                @Html.HiddenFor(m => m.ProjectID, new { @Class = "from-control span11" })
+                                                @Html.HiddenFor(m => m.PlanID, new { @Class = "from-control span11" })
+                                            </span>
+                                        </label>
+
+                                    </td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                    </td>
+                                    <td>
+                                        <label>
+                                            <b>Date</b> :
+                                            <span>@Html.DisplayFor(m => m.REF_Date)</span>
+
+
+                                        </label>
+
+                                    </td>
+                                    <td>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="widget-content nopadding">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+
+                            <tr>
+                                <th>S No.</th>
+                                <th>POINTS REVIEWED</th>
+                                <th>STATUS</th>
+                                <th>REMARKS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A</td>
+                                <td>AVAILABILITY OF MATERIALS PROPOSED</td>
+                                <td>
+                                    <div class="controls">
+                                        @*@Html.TextBoxFor(m=>m.)*@
+                                        @Html.CheckBoxFor(m => m.AVAILABILITYOFMATERIALSPROPOSED_STATUS)
+                                        @Html.HiddenFor(m => m.ProjectID, new { @Class = "from-control span11" })
+                                        @Html.HiddenFor(m => m.PlanID, new { @Class = "from-control span11" })
+                                        @*<input type="text" class="span11" placeholder="" />*@
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="controls">
+                                        @Html.TextBoxFor(m => m.AVAILABILITYOFMATERIALSPROPOSED_REMARKS, new { @class = "span11" })
+                                        @*<input type="text" class="span11" placeholder="" />*@
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>B</td>
+                                <td>WORKABILITY OF DESIGN AS PER FUNCTIONAL & PERFORMANCE REQUIREMENTS</td>
+                                <td>
+                                    <div class="controls">
+                                        @Html.CheckBoxFor(m => m.WORKABILITYOFDESIGNASPERFUNCTIONALPERFORMANCEREQUIREMENTS_STATUS)
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="controls">
+                                        @Html.TextBoxFor(m => m.WORKABILITYOFDESIGNASPERFUNCTIONALPERFORMANCEREQUIREMENTS_REMARKS, new { @class = " from-control span11" })
+
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>FEASIBILITY OF MANUFACTURING INCLUDING TOOL MAKING</td>
+                                <td>
+                                    <div class="controls">
+                                        @Html.CheckBoxFor(m => m.FEASIBILITYOFMANUFACTURINGINCLUDINGTOOLMAKING_STATUS)
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="controls">
+                                        @Html.TextBoxFor(m => m.FEASIBILITYOFMANUFACTURINGINCLUDINGTOOLMAKING_REMARKS, new { @class = "from-control span11" })
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>D</td>
+                                <td>PROBABILITY OF MEETING  THE TEST RESULTS</td>
+                                <td>
+                                    <div class="controls">
+                                        @Html.CheckBoxFor(m => m.PROBABILITYOFMEETINGTHETESTRESULTS_STATUS)
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="controls">
+                                        @Html.TextBoxFor(m => m.PROBABILITYOFMEETINGTHETESTRESULTS_REMARKS, new { @class = "from-control span11" })
+                                        @*<input type="text" class="span11" placeholder="" />*@
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>E</td>
+                                <td>PROBABILITY OF MEETING  CONSTRUCTIONAL</td>
+                                <td>
+                                    <div class="controls">
+                                        @*@Html.TextBoxFor(m=>m.)*@
+                                        @Html.CheckBoxFor(m => m.PROBABILITYOFMEETINGCONSTRUCTIONAL_STATUS)
+                                        @*<input type="text" class="span11" placeholder="" />*@
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="controls">
+                                        @Html.TextBoxFor(m => m.PROBABILITYOFMEETINGCONSTRUCTIONAL_REMARKS, new { @class = "from-control span11" })
+                                        @*<input type="text" class="span11" placeholder="" />*@
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>F</td>
+                                <td>PROBABILITY OF MEETING  STATUTORY & REGULATORY REQUIREMENTS</td>
+                                <td>
+                                    <div class="controls">
+                                        @*@Html.TextBoxFor(m=>m.)*@
+                                        @Html.CheckBoxFor(m => m.PROBABILITYOFMEETINGSTATUTORYREGULATORYREQUIREMENTS_STATUS)
+                                        @*<input type="text" class="span11" placeholder="" />*@
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="controls">
+                                        @Html.TextBoxFor(m => m.PROBABILITYOFMEETINGSTATUTORYREGULATORYREQUIREMENTS_REMARKS, new { @class = "from-control span11" })
+                                        @*<input type="text" class="span11" placeholder="" />*@
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>G</td>
+                                <td>EASE OF PACKAGING & AVAILABILITY</td>
+                                <td>
+                                    <div class="controls">
+                                        @*@Html.TextBoxFor(m=>m.)*@
+                                        @Html.CheckBoxFor(m => m.EASEOFPACKAGINGAVAILABILITY_STATUS)
+                                        @*<input type="text" class="span11" placeholder="" />*@
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="controls">
+                                        @Html.TextBoxFor(m => m.EASEOFPACKAGINGAVAILABILITY_REMARKS, new { @class = "from-control span11" })
+                                        @*<input type="text" class="span11" placeholder="" />*@
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>H</td>
+                                <td>EASE OF INSTALLATION BY USER</td>
+                                <td>
+                                    <div class="controls">
+                                        @*@Html.TextBoxFor(m=>m.)*@
+                                        @Html.CheckBoxFor(m => m.EASEOFINSTALLATIONBYUSER_STATUS)
+                                        @*<input type="text" class="span11" placeholder="" />*@
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="controls">
+                                        @Html.TextBoxFor(m => m.EASEOFINSTALLATIONBYUSER_REMARKS, new { @class = "from-control span11" })
+                                        @*<input type="text" class="span11" placeholder="" />*@
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>I</td>
+                                <td>
+                                    FTO SEARCH IN COORDINATION WITH KARAM IPR TEAM (IF REQUIRED)			:
+                                </td>
+                                <td>
+                                    <div class="controls">
+                                        @*@Html.TextBoxFor(m=>m.)*@
+                                        @Html.CheckBoxFor(m => m.FTOSEARCHINCOORDINATIONWITHKARAMIPRTEAM_STATUS)
+                                        @*<input type="text" class="span11" placeholder="" />*@
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="controls">
+                                        @Html.TextBoxFor(m => m.FTOSEARCHINCOORDINATIONWITHKARAMIPRTEAM_REMARKS, new { @class = "from-control span11" })
+                                        @*<input type="text" class="span11" placeholder="" />*@
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>J</td>
+                                <td>
+                                    AVAILABILITY OF MANPOWER
+                                </td>
+                                <td>
+                                    <div class="controls">
+                                        @*@Html.TextBoxFor(m=>m.)*@
+                                        @Html.CheckBoxFor(m => m.AVAILABILITYOFMANPOWER_STATUS)
+                                        @*<input type="text" class="span11" placeholder="" />*@
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="controls">
+                                        @Html.TextBoxFor(m => m.AVAILABILITYOFMANPOWER_REMARKS, new { @class = "from-control span11" })
+                                        @*<input type="text" class="span11" placeholder="" />*@
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>K</td>
+                                <td>
+                                    AVAILABILITY OF MACHINERY
+                                </td>
+                                <td>
+                                    <div class="controls">
+                                        @*@Html.TextBoxFor(m=>m.)*@
+                                        @Html.CheckBoxFor(m => m.AVAILABILITYOFMACHINERY_STATUS)
+                                        @*<input type="text" class="span11" placeholder="" />*@
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="controls">
+                                        @Html.TextBoxFor(m => m.AVAILABILITYOFMACHINERY_REMARKS, new { @class = "from-control span11" })
+                                        @*<input type="text" class="span11" placeholder="" />*@
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>L</td>
+                                <td>
+                                    Documents( If Any)
+                                </td>
+                                <td colspan="2">
+                                    <div class="controls">
+                                        @Html.TextBoxFor(m => m.DesignReview_DOCUMENTS, new { @Class = "from-control span11", @type = "File" })
+                                        @Html.HiddenFor(m => m.DesignReview_DOCUMENTSPATH)
+                                        @Html.HiddenFor(m => m.DesignReview_DocumentName)
+                                        <a href="@Model.DesignReview_DOCUMENTSPATH" target="_blank" rel="noopener" id="Doc_DR">@Model.DesignReview_DocumentName</a>
+                                        @if (!string.IsNullOrEmpty(Model.DesignReview_DOCUMENTSPATH) && @Model.DesignReview_DocumentName != "")
+                                        {
+                                            <button type="button" class="btn btn-sm btn-danger" id="DR_btn" onclick="remove_DesignReview(this)" style="padding:0px 5px"><span class="fa fa-remove"></span></button>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>M</td>
+                                <td>
+                                    REMARKS ( If Any)
+                                </td>
+                                <td colspan="2">
+                                    <div class="controls">
+                                        @Html.TextAreaFor(m => m.Remarks, new { @class = "from-control span11" })
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+                    @*<table class="table">
+                        <tr>
+                            <td>
+                                <label class="control-label text-center">
+                                    Checked By
+                                    <br />
+                                    Principal Lead (R&D)
+                                </label>
+                            </td>
+                            <td>
+                                <label class="control-label text-center">
+                                    Reviewd By<br />
+                                    AGM (R&D)
+                                </label>
+                            </td>
+                            <td>
+                                <label class="control-label text-center">
+                                    Approved By<br />
+                                    HOD (R&D)
+                                </label>
+                            </td>
+                        </tr>
+                    </table>*@
+                    @if (Model.PPR_Status != "3") {
+                    <div class="form-actions" style="text-align: center;padding-left:0px">
+                        <a href="~/DesignDevelopmetPlan/DevelopmentPlan?ProjectID=@Model.ProjectID" class="btn btn-danger">Cancel</a>
+                        @*@if (Model.ProjectID == 0)
+                            {*@
+                    <button type="submit" class="btn btn-success">Save & Update</button>
+                        @*}
+                            else
+                            {*@
+                        @*<button type="submit" class="btn btn-info">Edit</button>*@
+                        @*}*@
+
+                    </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<script src="~/Content/js/jquery.uniform.js"></script>
+<script>
+    function remove_DesignReview(button) {
+        debugger
+        $('#DesignReview_DOCUMENTS').val('');
+        $('#DesignReview_DOCUMENTSPATH').val('');
+        $('#DesignReview_DocumentName').val('');
+        $('#Doc_DR').text('');
+        $('#DR_btn').hide();
+    }
+</script>

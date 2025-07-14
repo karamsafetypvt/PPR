@@ -1,0 +1,1316 @@
+﻿@using PPRModel.Model
+@model ProductProjectReportModel
+@{
+    ViewBag.Title = "Product Project Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int i = 0;
+}
+<style>
+    .tblrespoonsive {
+        overflow-x: auto;
+    }
+
+    .sweat-alert-inner .sa-icon .sa-warning .col-xs-3 .pulseWarning {
+        left: 10px !important;
+    }
+</style>
+<link href="~/Content/css/select2.css" rel="stylesheet" />
+ 
+    <div id="content">
+        <div id="content-header">
+            <div id="breadcrumb">
+                <a href="~/Dashboard/Index" class="tip-bottom"><i class="icon-home"></i> Home</a>
+                <a href="~/ProductProjectReport/Index" class="current">Project Master</a>
+            </div>
+            <h1>Project Master</h1>
+        </div>
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    @if (Convert.ToInt16(Session["PPR_LoggedUserType"]) == 1)
+                    {
+                        <div>
+                            <a href="@Url.Action("Create", "ProductProjectReport")" class="btn btn-primary">
+                                <span>
+                                    <i class="fa fa-plus"></i>
+                                    <span>New</span>
+                                </span>
+                            </a>
+                        </div>
+                    }
+                    <div class="widget-content nopadding">
+                        <div class="form-horizontal">
+                            <table class="table table table-condensed particalDivAll">
+                                <thead>
+
+                                </thead>
+                                <tbody>
+                                    <tr class="odd gradeX">
+                                        <td>
+                                            <div style="margin-left: 0%;margin-top: 1%;">
+                                                @Html.TextBoxFor(m => m.SearchbyProjectNo, new { @class = "required", @Placeholder = "Project Number" })&nbsp;&nbsp;
+                                                @Html.DropDownListFor(m => m.SearchbyStatus, Model._SearchbyStatusList, new { @class = "required", @title = "Status" })&nbsp;&nbsp;
+                                                @Html.DropDownListFor(m => m.Status, Model._StatusList, new { @class = "required", @title = "Approval Status" })&nbsp;&nbsp;
+                                                @Html.TextBoxFor(m => m.SearchbyDate, new { @Placeholder = "Date", @id = "txtSearchbyDate", type = "date", @title = "Opening Date" })
+                                                &nbsp;&nbsp;
+                                                <button type="button" class="btn btn-success" onclick="Search_List()">Search</button>
+                                            </div>
+                                        </td>
+                                        
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="widget-box">
+                        <div class="widget-title">
+                            <span class="icon"><i class="icon-th"></i></span>
+                            <h5>Project List</h5>
+                        </div>
+
+                        <div id="partial_div"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="partialDiv" style="height:6000px;display:none">
+
+    </div>
+@*}*@
+
+@*<script src="~/Content/js/sweetalert-dev.js"></script>*@
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script type="text/javascript">
+    function Openpopup(popurl) {
+
+        winpops = window.open(popurl, "", "width=500, height=500, left=500, top=70, scrollbars=yes, menubar=no,resizable=no,directories=no,location=no")
+    }
+    //$(document).ready(function () {
+    //    $('select').select2();
+    //})
+
+    function Confirm(title, event) {
+        var clientid = event.id;
+
+        var href = $('#' + clientid).attr('href');
+        var returnType = false;
+
+        swal({
+            title: "Warning",//"Are you sure?",
+            text: title,
+            //text: "You will not be able to recover this imaginary file!",
+            type: "info",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        },
+            function (isConfirm, id) {
+                if (isConfirm) {
+                    window.location.href = href;
+                    returnType = true;
+                    //swal("Deleted!", "Record has been deleted.", "success");
+                } else {
+                    //$('div').click();
+                    $('#' + clientid).blur();
+                    returnType = false;
+                }
+            }
+        );
+        return returnType;
+    }
+    function Confirm_Forward(title, event, val) {
+
+        var txt = '<i class="fa fa-angle-double-right"></i>';
+        if (val == 3) {
+            txt = 'Approve';
+        }
+        //if (val == 0) {
+        //    txt = '';
+        //}
+        //var clientid = event.id;
+        var href = event.href;
+        //var href = $('#' + clientid).attr('href');
+        var returnType = false;
+        if (val != 0) { }
+        Swal.fire({
+            title: title,
+            /*  text: title,*/
+            /* type: "info",*/
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: '<i class="fa fa-angle-double-left"></i>',
+            //cancelButtonText: "No",
+            //closeOnConfirm: true,
+            //closeOnCancel: true,
+            denyButtonText: txt,
+            denyButtonColor: "#5bb75b",
+            showDenyButton: true,
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+                swal({
+                    title: "Warning",//"Are you sure?",
+                    text: 'Are you sure you want to Forward to Previous Level ?',
+                    //text: "You will not be able to recover this imaginary file!",
+                    type: "input",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    animation: "slide-from-top",
+                    inputPlaceholder: "Remark"
+                },
+                    function (inputValue, id) {
+                        if (inputValue === false)
+                            return false;
+
+                        if (inputValue === "") {
+                            swal.showInputError("You need to write something!");
+                            return false;
+                        }
+                        //if (isConfirm) {
+                        window.location.href = href + '&Type=Pre&Remark=' + inputValue;
+                        returnType = true;
+                        //} else {
+                        //    $('#' + clientid).blur();
+                        //    returnType = false;
+                        //}
+                    }
+                );
+            } else if (result.isDenied) {
+                window.location.href = href + '&Type=Next&Remark=' + '';
+                returnType = true;
+            }
+            else {
+
+                $('#' + clientid).blur();
+                returnType = false;
+            }
+        }
+        );
+        return returnType;
+    }
+    function Confirm_ForwardLevel0(title, event, val) {
+
+        var txt = '<i class="fa fa-angle-double-right"></i>';
+        if (val == 3) {
+            txt = 'Approve';
+        }
+        //if (val == 0) {
+        //    txt = '';
+        //}
+        //var clientid = event.id;
+        var href = event.href;
+        //var href = $('#' + clientid).attr('href');
+        var returnType = false;
+        if (val != 0) { }
+        Swal.fire({
+            title: title,
+            showCancelButton: true,
+            confirmButtonColor: "#5bb75b",
+            confirmButtonText: txt,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = href + '&Type=Next&Remark=' + '';
+                returnType = true;
+            }
+            else {
+                $('#' + clientid).blur();
+                returnType = false;
+            }
+        }
+        );
+        return returnType;
+    }
+
+
+</script>
+<script>
+    function GetReport(ProjectID) {
+
+        $.ajax(
+            {
+                type: 'Get',
+                url: '/Reports/GetPPRReport?ProjectID=' + ProjectID,
+                beforeSend: function () {
+                    /* $('.page-loader-wrapper').show();*/
+                },
+                complete: function () {
+                    /*$('.page-loader-wrapper').hide();*/
+                },
+                success:
+                    function (response) {
+
+                        var html = '';
+                        if (response != "") {
+                            var List = $.parseJSON(response);
+
+                            var result = List[0];
+                            html += '<div class="span12 table2excel" id="PPRDetails" data-SheetName="Project Details" style="text-align:center">';
+                            html += '<table class="table">'
+                            html += '<thead>';
+                            html += '<tr>';
+                            html += '<td colspan="12"><img src="' + result.Url + '/img/karamlogo.png" alt="Logo" style="width:50px;height:50px"></td>';
+                            html += '</tr><tr><td colspan="12"></td></tr><tr><td colspan="4"></td><td colspan="9"><h1> Product Project Report (R & D)</h1></td></tr><tr><td colspan="12"></td></tr><tr><td colspan="12"></td></tr>';
+                            html += '<thead></table> ';
+
+
+                            html += '<table class="table table table-bordered" style="border:1px solid black">'
+                            html += '<thead></thead>';
+                            html += '<tbody>';
+                            html += '<tr>';
+                            html += '<td colspan="3" style="font-weight:bold;border:1px solid black">Project Title</td>';
+                            html += '<td colspan="3" style="border:1px solid black"> ' + result.ProjectTitle + '</td>';
+                            html += '<td colspan="3"  style="font-weight:bold;border:1px solid black">Project No</td>';
+                            html += '<td colspan="3" style="border:1px solid black"> ' + result.ProjectNumber + '</td>';
+                            html += '</tr>';
+                            html += '<tr>';
+                            html += '<td colspan="3" style="font-weight:bold;border:1px solid black">Coordinator</td>';
+                            html += '<td colspan="3" style="border:1px solid black"> ' + result.Coordinator + '</td>';
+                            html += '<td colspan="3"  style="font-weight:bold;border:1px solid black">Product Category</td>';
+                            html += '<td colspan="3" style="border:1px solid black"> ' + result.Product_Category + '</td>';
+                            html += '</tr>';
+                            html += '<tr>';
+                            html += '<td colspan="3" style="font-weight:bold;border:1px solid black">Product Ref. No.</td>';
+                            html += '<td colspan="3" style="border:1px solid black"> ' + result.Product_Ref_No + '</td>';
+                            html += '<td colspan="3"  style="font-weight:bold;border:1px solid black">Product Description</td>';
+                            html += '<td colspan="3" style="border:1px solid black"> ' + result.ProductDescription + '</td>';
+                            html += '</tr>';
+                            html += '<tr>';
+                            html += '<td colspan="3" style="font-weight:bold">Opening Date</td>';
+                            html += '<td colspan="3" style="border:1px solid black"> ' + result.OpeningDate + '</td>';
+                            html += '<td colspan="3"  style="font-weight:bold;border:1px solid black">Closing Date</td>';
+                            html += '<td colspan="3" style="border:1px solid black"> ' + result.ClosingDate + '</td>';
+                            html += '</tr>';
+                            html += '</tbody>';
+                            html += '</table >';
+                            html += '</div ><br/>';
+                            //-----------------------------Development Plan-------------------------
+
+                            html += '<div class="span12 table2excel" id="PPRDDP"style="text-align:center" data-SheetName="Design Development Plan" >';
+                            /*  html += '<h1><img src="../../img/Karam.png" alt="Logo"></h1> '*/
+                            html += '<table class="table">'
+                            html += '<thead>';
+                            html += '<tr>';
+                            html += '<td colspan="10"><img src="' + result.Url + '/img/karamlogo.png" alt="Logo" style="width:50px;height:50px"></td><td>QF/IPD/01</td>';
+                            html += '</tr><tr><td colspan="12"></td></tr><tr><td colspan="3"></td><td colspan="6"><h1> DESIGN DEVELOPMENT PLAN</h1></td></tr><tr><td colspan="12"></td></tr><tr><td colspan="12"></td></tr>';
+                            html += '<thead></table> ';
+
+                            html += '<table class="table table table-bordered" style="border:1px solid black">'
+                            html += '<thead>';
+                            html += '<tr>';
+                            html += '<th  style="border:1px solid black">Sr. No.</th>';
+                            html += '<th  style="border:1px solid black">Activity</th>';
+                            html += '<th  style="border:1px solid black">Nature (Individaul<br />/Team)</th>';
+                            html += '<th  style="border:1px solid black">Resources Req</th>';
+                            html += '<th  style="border:1px solid black">Responsibility</th>';
+                            html += '<th  style="border:1px solid black">Assigned Date</th>';
+                            html += '<th  style="border:1px solid black">Target Date</th>';
+                            html += '<th  style="border:1px solid black">Approving Authority</th>';
+                            html += '<th  style="border:1px solid black">Completion <br />Date</th>';
+                            html += '<th  style="border:1px solid black">Remarks</th>';
+                            html += '<th  style="border:1px solid black">Aging (in days)</th>';
+                            html += '</tr>';
+                            html += '</thead>';
+                            html += '<tbody>';
+                            var DevelopmentList = result.DevelopmentPlan;
+                            for (var i = 0; i < DevelopmentList.length; i++) {
+                                var data = DevelopmentList[i];
+                                html += '<tr>';
+                                html += '<td style="border:1px solid black"> ' + Number(i + 1) + '</td>';
+                                html += '<td style="border:1px solid black"> ' + data.ActivityName + '</td>';
+                                if (data.ActivityName == "Further modifications/ improvement (if required) activity 4 onwards repeated" && data.Nature == "Individual") {
+
+                                    html += '<td style="border:1px solid black">Not Required</td>';
+                                }
+                                else if (data.ActivityName == "Further modifications/ improvement (if required) activity 4 onwards repeated" && data.Nature == "Team") {
+
+                                    html += '<td style="border:1px solid black">Required</td>';
+                                }
+                                else if (data.ActivityName == "Further modification / improvement (if required) activity 10 onwards repeated" && data.Nature == "Individual") {
+
+                                    html += '<td style="border:1px solid black">Not Required</td>';
+                                }
+                                else if (data.ActivityName == "Further modification / improvement (if required) activity 10 onwards repeated" && data.Nature == "Team") {
+
+                                    html += '<td style="border:1px solid black">Required</td>';
+                                }
+                                else {
+                                    html += '<td style="border:1px solid black"> ' + data.Nature + '</td>';
+                                }
+
+                                html += '<td style="border:1px solid black"> ' + data.ResourcesReq + '</td>';
+                                html += '<td style="border:1px solid black"> ' + data.Responsibility + '</td>';
+                                html += '<td style="border:1px solid black"> ' + data.AssignedDate + '</td>';
+                                html += '<td style="border:1px solid black"> ' + data.TargetDate + '</td>';
+                                html += '<td style="border:1px solid black"> ' + data.ApprovingAuthority + '</td>';
+                                html += '<td style="border:1px solid black"> ' + data.CompletionDate + '</td>';
+                                html += '<td style="border:1px solid black"> ' + data.Remark + '</td>';
+                                html += '<td style="border:1px solid black"> ' + data.Aging + '</td>';
+                                html += '</tr>';
+                            }
+                            html += '</tbody>';
+                            html += '</table >';
+                            html += '</div >';
+
+                            //-------------------------- Design Input Data Sheet -----------------------------
+
+                            var DIDSList = result.DIDS;
+                            if (DIDSList.length > 0) {
+                                html += '<div class="span12 table2excel" id="PPRDIDS"style="text-align:center" data-SheetName="Design Input Data Sheet">';
+                                /*  html += '<h1><img src="../../img/Karam.png" alt="Logo"> DESIGN INPUT DATA SHEET</h1> '*/
+
+                                html += '<table class="table">'
+                                html += '<thead>';
+                                html += '<tr>';
+                                html += '<td colspan="5"><img src="' + result.Url + '/img/karamlogo.png" alt="Logo" style="width:50px;height:50px"></td><td>QF/IPD/02</td>';
+                                html += '</tr><tr><td colspan="12"></td></tr><tr><td colspan="2"></td><td colspan="7"><h1> DESIGN INPUT DATA SHEET</h1></td></tr><tr><td colspan="12"></td></tr><tr><td colspan="12"></td></tr>';
+                                html += '<thead></table> ';
+
+                                html += '<table class="table table table-bordered" style="border:1px solid black">'
+                                html += '<thead></thead>';
+                                html += '<tbody>';
+                                html += '<tr>';
+                                html += '<td colspan="3" style="font-weight:bold;border:1px solid black">Project Title</td>';
+                                html += '<td colspan="3" style="border:1px solid black"> ' + result.ProjectTitle + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td colspan="3"  style="font-weight:bold;border:1px solid black">Project No</td>';
+                                html += '<td colspan="3" style="border:1px solid black"> ' + result.ProjectNumber + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td colspan="3" style="font-weight:bold;border:1px solid black">NAME OF THE CO – ORDINATOR</td>';
+                                html += '<td colspan="3" style="border:1px solid black"> ' + result.Coordinator + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td colspan="3"  style="font-weight:bold;border:1px solid black">REFERENCE STANDARDS</td>';
+                                html += '<td colspan="3" style="border:1px solid black"> ' + DIDSList[0].ProductRefNo + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td colspan="3"  style="font-weight:bold;border:1px solid black">FUNCTIONAL & PERFORMANCE REQUIREMENT</td>';
+                                html += '<td colspan="3" style="border:1px solid black"> ' + DIDSList[0].Functional_Performar_Requirement + '</td>';
+                                html += '</tr>';
+                                html += '<tr style="background: #d1cef8;">';
+                                html += '<td  colspan="3" style="font-weight:bold;border:1px solid black;">SPECIFICATIONS ( Testing Requirement )</td>';
+                                html += '<td colspan="3" style="border:1px solid black"> </td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  colspan="3" style="font-weight:bold;border:1px solid black">a) Static Strength</td>';
+                                html += '<td colspan="3" style="border:1px solid black"> ' + DIDSList[0].StaticStrength + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  colspan="3" style="font-weight:bold;border:1px solid black">(b) Dynamic Strength</td>';
+                                html += '<td colspan="3" style="border:1px solid black"> ' + DIDSList[0].DynamicStrength + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  colspan="3" style="font-weight:bold;border:1px solid black">(c) Corrosion Resistance</td>';
+                                html += '<td colspan="3" style="border:1px solid black"> ' + DIDSList[0].corrosionResistance + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  colspan="3" style="font-weight:bold;border:1px solid black">(d) Other</td>';
+                                html += '<td colspan="3" style="border:1px solid black"> ' + DIDSList[0].Other + '</td>';
+                                html += '</tr>';
+                                html += '<tr  style="background: #d1cef8;">';
+                                html += '<td  colspan="3" style="font-weight:bold;border:1px solid black">CONSTRUCTIONAL & SAFETY REQUIREMENTS</td>';
+                                html += '<td colspan="3" style="border:1px solid black"> </td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  colspan="3" style="font-weight:bold;border:1px solid black">(a) Material Specific</td>';
+                                html += '<td  colspan="3"style="border:1px solid black"> ' + DIDSList[0].MaterialSpecific + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  colspan="3" style="font-weight:bold;border:1px solid black">(b) Process Specific</td>';
+                                html += '<td colspan="3" style="border:1px solid black"> ' + DIDSList[0].ProcessSpecific + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  colspan="3" style="font-weight:bold;border:1px solid black">STATUTORY & REGULATORY REQUIREMENTS ( If Any )</td>';
+                                html += '<td colspan="3" style="border:1px solid black"> ' + DIDSList[0].Statutory_Regulatory_Requirement + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  colspan="3" style="font-weight:bold;border:1px solid black">SPECIAL ENVIRONMENT CONDITIONS (If Required)</td>';
+                                html += '<td  colspan="3" style="border:1px solid black"> ' + DIDSList[0].SPECIAL_ENVIRONMENT_CONDITIONS + '</td>';
+                                html += '</tr>';
+                                html += '<tr  style="background: #d1cef8;">';
+                                html += '<td  colspan="3" style="font-weight:bold;border:1px solid black">OUTER DESIGN INPUTS </td>';
+                                html += '<td  colspan="3" style="border:1px solid black"></td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  colspan="3" style="font-weight:bold;border:1px solid black">(a) Packaging</td>';
+                                html += '<td colspan="3" style="border:1px solid black"> ' + DIDSList[0].Packaging + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  colspan="3" style="font-weight:bold;border:1px solid black">(b) Sticker & Labels</td>';
+                                html += '<td colspan="3" style="border:1px solid black"> ' + DIDSList[0].StickerLabels + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  colspan="3" style="font-weight:bold;border:1px solid black">(c) User Instruction</td>';
+                                html += '<td colspan="3" style="border:1px solid black"> ' + DIDSList[0].UserInstruction + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  colspan="3" style="font-weight:bold;border:1px solid black">Benchmarking Criteria</td>';
+                                html += '<td colspan="3" style="border:1px solid black"> ' + DIDSList[0].Benchmarking_Criteria + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  colspan="3" style="font-weight:bold;border:1px solid black">INFORMATION FROM EARLIER PROJECTS (IF ANY)</td>';
+                                html += '<td colspan="3" style="border:1px solid black"> ' + DIDSList[0].INFORMATION_EARLIER_PROJECTS + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  colspan="3" style="font-weight:bold;border:1px solid black">NEED OF INVOLVEMENT OF CUSTOMER IN DEVELOPMENT (IF REQUIRED)</td>';
+                                html += '<td colspan="3" style="border:1px solid black"> ' + DIDSList[0].CUSTOMER_IN_DEVELOPMENT + '</td>';
+                                html += '</tr>';
+                                html += '</tbody>';
+                                html += '</table >';
+                                html += '</div ><br/>';
+
+                            }
+                            //-------------------------- Design Review Data Sheet -----------------------------
+                            var DRDSList = result.DesignReviewDataSheet;
+                            if (DRDSList.length > 0) {
+                                html += '<div class="span12 table2excel" id="PPRDRDS"style="text-align:center" data-SheetName="Design Review Data Sheet">';
+                                /* html += '<h1><img src="../../img/Karam.png" alt="Logo"> Design Review Data Sheet</h1> '*/
+
+                                html += '<table class="table">'
+                                html += '<thead>';
+                                html += '<tr>';
+                                html += '<td colspan="5"><img src="' + result.Url + '/img/karamlogo.png" alt="Logo" style="width:50px;height:50px"></td><td>QF/IPD/03</td>';
+                                html += '</tr><tr><td colspan="12"></td></tr><tr><td colspan="2"></td><td  colspan="9"><h1> Design Review Data Sheet</h1></td></tr><tr><td colspan="12"></td></tr><tr><td colspan="12"></td></tr>';
+                                html += '<thead></table> ';
+
+                                html += '<table class="table table table-bordered" style="border:1px solid black">'
+                                html += '<thead>';
+                                html += '<tr>';
+                                html += '<td colspan="2" style="font-weight:bold;border:1px solid black">Project No</td>';
+                                html += '<td colspan="4" style="border:1px solid black"> ' + result.ProjectNumber + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td colspan="2"  style="font-weight:bold;border:1px solid black">Date</td>';
+                                html += '<td colspan="4" style="border:1px solid black"> ' + result.OpeningDate + '</td>';
+                                html += '</tr>';
+                                html += '</thead>';
+                                html += '<tr>';
+                                html += '<th style="border:1px solid black">Sr. No.</th>';
+                                html += '<th style="border:1px solid black">POINTS REVIEWED</th>';
+                                html += '<th style="border:1px solid black">Status</th>';
+                                html += '<th colspan="3" style="border:1px solid black">Remarks</th>';
+                                html += '</tr>';
+                                html += '</thead>';
+                                html += '<tbody>';
+                                html += '<tr>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">a</td>';
+                                html += '<td style="font-weight:bold;border:1px solid black">AVAILABILITY OF MATERIALS PROPOSED</td>';
+                                if (DRDSList[0].AVAILABILITYOFMATERIALSPROPOSED_STATUS == true) {
+                                    html += '<td colspan="1" style="border:1px solid black">Yes</td>';
+                                } else {
+                                    html += '<td colspan="1" style="border:1px solid black">No</td>';
+                                }
+                                html += '<td colspan="3" style="border:1px solid black">' + DRDSList[0].AVAILABILITYOFMATERIALSPROPOSED_REMARKS + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td   style="font-weight:bold;border:1px solid black">b</td>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">WORKABILITY OF DESIGN AS PER FUNCTIONAL & PERFORMANCE REQUIREMENTS</td>';
+                                if (DRDSList[0].WORKABILITYOFDESIGNASPERFUNCTIONALPERFORMANCEREQUIREMENTS_STATUS == true) {
+                                    html += '<td  style="border:1px solid black">Yes</td>';
+                                } else {
+                                    html += '<td  style="border:1px solid black">No</td>';
+                                }
+                                html += '<td colspan="3" style="border:1px solid black"> ' + DRDSList[0].WORKABILITYOFDESIGNASPERFUNCTIONALPERFORMANCEREQUIREMENTS_REMARKS + '</td>';
+                                html += '</tr>';
+                                html += '<tr">';
+                                html += '<td  style="font-weight:bold;border:1px solid black">c</td>';
+                                html += '<td  style="font-weight:bold;border:1px solid black;">FEASIBILITY OF MANUFACTURING INCLUDING TOOL MAKING</td>';
+                                if (DRDSList[0].FEASIBILITYOFMANUFACTURINGINCLUDINGTOOLMAKING_STATUS == true) {
+                                    html += '<td  style="border:1px solid black">Yes</td>';
+                                } else {
+                                    html += '<td  style="border:1px solid black">No</td>';
+                                }
+                                html += '<td colspan="3" style="border:1px solid black"> ' + DRDSList[0].FEASIBILITYOFMANUFACTURINGINCLUDINGTOOLMAKING_REMARKS + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td style="font-weight:bold;border:1px solid black">d</td>';
+                                html += '<td style="font-weight:bold;border:1px solid black">PROBABILITY OF MEETING THE TEST RESULTS</td>';
+                                if (DRDSList[0].PROBABILITYOFMEETINGTHETESTRESULTS_STATUS == true) {
+                                    html += '<td  style="border:1px solid black">Yes</td>';
+                                } else {
+                                    html += '<td  style="border:1px solid black">No</td>';
+                                }
+                                html += '<td colspan="3" style="border:1px solid black"> ' + DRDSList[0].PROBABILITYOFMEETINGTHETESTRESULTS_REMARKS + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">e</td>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">PROBABILITY OF MEETING  CONSTRUCTIONAL & SAFETY REQUIREMENTS</td>';
+                                if (DRDSList[0].PROBABILITYOFMEETINGCONSTRUCTIONAL_STATUS == true) {
+                                    html += '<td  style="border:1px solid black">Yes</td>';
+                                } else {
+                                    html += '<td  style="border:1px solid black">No</td>';
+                                }
+                                html += '<td colspan="3" style="border:1px solid black"> ' + DRDSList[0].PROBABILITYOFMEETINGCONSTRUCTIONAL_REMARKS + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">f</td>';
+                                html += '<td   style="font-weight:bold;border:1px solid black">PROBABILITY OF MEETING  STATUTORY & REGULATORY REQUIREMENTS</td>';
+                                if (DRDSList[0].PROBABILITYOFMEETINGSTATUTORYREGULATORYREQUIREMENTS_STATUS == true) {
+                                    html += '<td  style="border:1px solid black">Yes</td>';
+                                } else {
+                                    html += '<td  style="border:1px solid black">No</td>';
+                                }
+                                html += '<td colspan="3"  style="border:1px solid black"> ' + DRDSList[0].PROBABILITYOFMEETINGSTATUTORYREGULATORYREQUIREMENTS_REMARKS + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td   style="font-weight:bold;border:1px solid black">g</td>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">EASE OF PACKAGING & AVAILABILITY</td>';
+                                if (DRDSList[0].EASEOFPACKAGINGAVAILABILITY_STATUS == true) {
+                                    html += '<td  style="border:1px solid black">Yes</td>';
+                                } else {
+                                    html += '<td  style="border:1px solid black">No</td>';
+                                }
+                                html += '<td colspan="3" style="border:1px solid black"> ' + DRDSList[0].EASEOFPACKAGINGAVAILABILITY_REMARKS + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">h</td>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">EASE OF INSTALLATION BY USER</td>';
+                                if (DRDSList[0].EASEOFINSTALLATIONBYUSER_STATUS == true) {
+                                    html += '<td  style="border:1px solid black">Yes</td>';
+                                } else {
+                                    html += '<td  style="border:1px solid black">No</td>';
+                                }
+                                html += '<td  colspan="3" style="border:1px solid black"> ' + DRDSList[0].EASEOFINSTALLATIONBYUSER_REMARKS + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">i</td>';
+                                html += '<td style="font-weight:bold;border:1px solid black">FTO SEARCH IN COORDINATION WITH KARAM IPR TEAM (IF REQUIRED)</td>';
+                                if (DRDSList[0].FTOSEARCHINCOORDINATIONWITHKARAMIPRTEAM_STATUS == true) {
+                                    html += '<td  style="border:1px solid black">Yes</td>';
+                                } else {
+                                    html += '<td  style="border:1px solid black">No</td>';
+                                }
+                                html += '<td colspan="3" style="border:1px solid black"> ' + DRDSList[0].FTOSEARCHINCOORDINATIONWITHKARAMIPRTEAM_REMARKS + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">j</td>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">AVAILABILITY OF MANPOWER </td>';
+                                if (DRDSList[0].AVAILABILITYOFMANPOWER_STATUS == true) {
+                                    html += '<td  style="border:1px solid black">Yes</td>';
+                                } else {
+                                    html += '<td  style="border:1px solid black">No</td>';
+                                }
+                                html += '<td colspan="3" style="border:1px solid black"> ' + DRDSList[0].AVAILABILITYOFMANPOWER_REMARKS + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">k</td>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">AVAILABILITY OF MACHINERY</td>';
+                                if (DRDSList[0].AVAILABILITYOFOFMACHINERY_STATUS == true) {
+                                    html += '<td  style="border:1px solid black">Yes</td>';
+                                } else {
+                                    html += '<td  style="border:1px solid black">No</td>';
+                                }
+                                html += '<td colspan="3" style="border:1px solid black"> ' + DRDSList[0].AVAILABILITYOFMACHINERY_REMARKS + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">l</td>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">Remark</td>';
+                                html += '<td style="border:1px solid black"> ' + DRDSList[0].Remarks + '</td>';
+                                html += '<td colspan="3" style="border:1px solid black"></td>';
+                                html += '</tr>';
+                                html += '</tbody>';
+                                html += '</table><br/>';
+                                html += '</div ><br/>';
+
+                            }
+
+                            //--------------------------Design Verification-----------------------------
+
+                            var DVList = result.DesignVerification;
+                            if (DVList.length > 0) {
+                                html += '<div class="span12 table2excel" id="DVList"style="text-align:center" data-SheetName="Design Verification">';
+                                /* html += '<h1><img src="../../img/Karam.png" alt="Logo"> Design Verification</h1> '*/
+
+                                html += '<table class="table">'
+                                html += '<thead>';
+                                html += '<tr>';
+                                html += '<td colspan="5"><img src="' + result.Url + '/img/karamlogo.png" alt="Logo" style="width:50px;height:50px"></td><td>QF/IPD/04</td>';
+                                html += '</tr><tr><td colspan="12"></td></tr><tr><td colspan="2"></td><td  colspan="9"><h1>  Design Verification</h1></td></tr><tr><td colspan="12"></td></tr><tr><td colspan="12"></td></tr>';
+                                html += '<thead></table> ';
+
+                                html += '<table class="table table table-bordered" style="border:1px solid black">'
+                                html += '<thead></thead>';
+                                html += '<tbody>';
+                                html += '<tr>';
+                                html += '<td colspan="3" style="font-weight:bold;border:1px solid black">Project Title</td>';
+                                html += '<td colspan="3" style="border:1px solid black"> ' + result.ProjectTitle + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td colspan="3"  style="font-weight:bold;border:1px solid black">Project No</td>';
+                                html += '<td colspan="3" style="border:1px solid black"> ' + result.ProjectNumber + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td colspan="3" style="font-weight:bold;border:1px solid black">NAME OF THE CO – ORDINATOR</td>';
+                                html += '<td colspan="3" style="border:1px solid black"> ' + result.Coordinator + '</td>';
+                                html += '</tr>';
+                                html += '<thead>';
+                                html += '<tr>';
+                                html += '<th style="border:1px solid black">PARTICULARS</th>';
+                                html += '<th style="border:1px solid black">REQUIREMENTS</th>';
+                                html += '<th style="border:1px solid black">OBSERVATIONS</th>';
+                                html += '<th colspan="3"  style="border:1px solid black">REMARKS</th>';
+                                html += '</tr>';
+                                html += '</thead >';
+                                html += '<tr style="background: #d1cef8;">';
+                                html += '<td style="font-weight:bold;border:1px solid black;">FUNCTIONAL & PERFORMANCE REQUIREMENT</td>';
+                                html += '<td style="border:1px solid black"> ' + DVList[0].Functional_Performar_Requirement + '</td>';
+                                html += '<td style="border:1px solid black">' + DVList[0].Functional_Performar_Observation + ' </td>';
+                                html += '<td colspan="3"  style="border:1px solid black">' + DVList[0].Functional_Performar_Remarks + ' </td>';
+                                html += '</tr>';
+                                html += '<tr style="background: #d1cef8;">';
+                                html += '<td  colspan="3" style="font-weight:bold;border:1px solid black;">SPECIFICATIONS ( Testing Requirement )</td>';
+                                html += '<td colspan="3" style="border:1px solid black"> </td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td   style="font-weight:bold;border:1px solid black">a) Static Strength</td>';
+                                html += '<td  style="border:1px solid black"> ' + DVList[0].Static_Strengh_Req + '</td>';
+                                html += '<td  style="border:1px solid black"> ' + DVList[0].Static_Strengh_Observation + '</td>';
+                                html += '<td colspan="3"   style="border:1px solid black"> ' + DVList[0].Static_Strengh_Remarks + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">(b) Dynamic Strength</td>';
+                                html += '<td style="border:1px solid black"> ' + DVList[0].Dynamic_Strengh_Requirement + '</td>';
+                                html += '<td  style="border:1px solid black"> ' + DVList[0].Dynamic_Strengh_Observation + '</td>';
+                                html += '<td colspan="3"  style="border:1px solid black"> ' + DVList[0].Dynamic_Strengh_Remarks + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">(c) Corrosion Resistance</td>';
+                                html += '<td  style="border:1px solid black"> ' + DVList[0].corrosion_Resistance_Requirement + '</td>';
+                                html += '<td  style="border:1px solid black"> ' + DVList[0].corrosion_Resistance_Observation + '</td>';
+                                html += '<td colspan="3"  style="border:1px solid black"> ' + DVList[0].corrosion_Resistance_Remarks + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">(d) Other</td>';
+                                html += '<td  style="border:1px solid black"> ' + DVList[0].Other_Requirement + '</td>';
+                                html += '<td  style="border:1px solid black"> ' + DVList[0].Other_Observation + '</td>';
+                                html += '<td colspan="3"  style="border:1px solid black"> ' + DVList[0].Other_Remarks + '</td>';
+                                html += '</tr>';
+                                html += '<tr  style="background: #d1cef8;">';
+                                html += '<td  colspan="3" style="font-weight:bold;border:1px solid black">CONSTRUCTIONAL & SAFETY REQUIREMENTS</td>';
+                                html += '<td colspan="3" style="border:1px solid black"> </td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td   style="font-weight:bold;border:1px solid black">(a) Material Specific</td>';
+                                html += '<td  style="border:1px solid black"> ' + DVList[0].MaterialSpecific_Requirement + '</td>';
+                                html += '<td  style="border:1px solid black"> ' + DVList[0].MaterialSpecific_Observation + '</td>';
+                                html += '<td colspan="3"  style="border:1px solid black"> ' + DVList[0].MaterialSpecific_Remarks + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">(b) Process Specific</td>';
+                                html += '<td  style="border:1px solid black"> ' + DVList[0].ProcessSpecific_Requirement + '</td>';
+                                html += '<td  style="border:1px solid black"> ' + DVList[0].ProcessSpecific_Observation + '</td>';
+                                html += '<td colspan="3"  style="border:1px solid black"> ' + DVList[0].ProcessSpecific_Remarks + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">STATUTORY & REGULATORY REQUIREMENTS ( If Any )</td>';
+                                html += '<td style="border:1px solid black"> ' + DVList[0].Statutory_Regulatory_Requirement + '</td>';
+                                html += '<td  style="border:1px solid black"> ' + DVList[0].Statutory_Regulatory_Observation + '</td>';
+                                html += '<td colspan="3"  style="border:1px solid black"> ' + DVList[0].Statutory_Regulatory_Remark + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">SPECIAL ENVIRONMENT CONDITIONS (If Required)</td>';
+                                html += '<td style="border:1px solid black"> ' + DVList[0].SPECIAL_ENVIRONMENT_CONDITIONS_Req + '</td>';
+                                html += '<td style="border:1px solid black"> ' + DVList[0].SPECIAL_ENVIRONMENT_CONDITIONS_Observation + '</td>';
+                                html += '<td colspan="3"  style="border:1px solid black"> ' + DVList[0].SPECIAL_ENVIRONMENT_CONDITIONS_Remarks + '</td>';
+                                html += '</tr>';
+                                html += '<tr  style="background: #d1cef8;">';
+                                html += '<td  colspan="3" style="font-weight:bold;border:1px solid black">OUTER DESIGN INPUTS </td>';
+                                html += '<td  colspan="3" style="border:1px solid black"></td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td   style="font-weight:bold;border:1px solid black">(a) Packaging</td>';
+                                html += '<td  style="border:1px solid black"> ' + DVList[0].Packaging_Requirement + '</td>';
+                                html += '<td  style="border:1px solid black"> ' + DVList[0].Packaging_Observation + '</td>';
+                                html += '<td colspan="3"  style="border:1px solid black"> ' + DVList[0].Packaging_Remarks + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">(b) Sticker & Labels</td>';
+                                html += '<td style="border:1px solid black"> ' + DVList[0].StickerLabel_Requirement + '</td>';
+                                html += '<td style="border:1px solid black"> ' + DVList[0].StickerLabel_Observation + '</td>';
+                                html += '<td colspan="3"  style="border:1px solid black"> ' + DVList[0].StickerLabel_Remarks + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td   style="font-weight:bold;border:1px solid black">(c) User Instruction</td>';
+                                html += '<td  style="border:1px solid black"> ' + DVList[0].UserInstruction_Requirement + '</td>';
+                                html += '<td  style="border:1px solid black"> ' + DVList[0].UserInstruction_Observation + '</td>';
+                                html += '<td colspan="3"  style="border:1px solid black"> ' + DVList[0].UserInstruction_Remarks + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td   style="font-weight:bold;border:1px solid black">INFORMATION FROM EARLIER PROJECTS (IF ANY)</td>';
+                                html += '<td  style="border:1px solid black"> ' + DVList[0].INFORMATION_EARLIER_PROJECTS_REQ + '</td>';
+                                html += '<td  style="border:1px solid black"> ' + DVList[0].INFORMATION_EARLIER_PROJECTS_Observation + '</td>';
+                                html += '<td colspan="3"  style="border:1px solid black"> ' + DVList[0].INFORMATION_EARLIER_PROJECTS_Remarks + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">NEED OF INVOLVEMENT OF CUSTOMER IN DEVELOPMENT (IF REQUIRED)</td>';
+                                html += '<td  style="border:1px solid black"> ' + DVList[0].CUSTOMER_IN_DEVELOPMENT_REQ + '</td>';
+                                html += '<td  style="border:1px solid black"> ' + DVList[0].CUSTOMER_IN_DEVELOPMENT_Observation + '</td>';
+                                html += '<td colspan="3"  style="border:1px solid black"> ' + DVList[0].CUSTOMER_IN_DEVELOPMENT_Remarks + '</td>';
+                                html += '</tr>';
+
+                                html += '</tbody>';
+                                html += '</table >';
+                                html += '</div ><br/>';
+
+                            }
+
+                            //-------------------------- Design Validation Data Sheet -----------------------------
+                            debugger
+                            var DValidation = result.DesignValidation;
+                            if (DValidation.length > 0) {
+                                html += '<div class="span12 table2excel" id="PPRDV"style="text-align:center" data-SheetName="Design Validation">';
+                                /* html += '<h1><img src="../../img/Karam.png" alt="Logo"> Design Review Data Sheet</h1> '*/
+
+                                html += '<table class="table">'
+                                html += '<thead>';
+                                html += '<tr>';
+                                html += '<td colspan="5"><img src="' + result.Url + '/img/karamlogo.png" alt="Logo" style="width:50px;height:50px"></td><td>QF/IPD/05</td>';
+                                html += '</tr><tr><td colspan="12"></td></tr><tr><td colspan="1"></td><td  colspan="9"><h1> Design Validation</h1></td></tr><tr><td colspan="12"></td></tr><tr><td colspan="12"></td></tr>';
+                                html += '<thead></table> ';
+
+                                html += '<table class="table table table-bordered" style="border:1px solid black">'
+                                html += '<thead>';
+                                html += '<tr>';
+                                html += '<td colspan="2" style="font-weight:bold;border:1px solid black">Project No</td>';
+                                html += '<td colspan="4" style="border:1px solid black"> ' + result.ProjectNumber + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td colspan="2"  style="font-weight:bold;border:1px solid black">Date</td>';
+                                html += '<td colspan="4" style="border:1px solid black"> ' + result.OpeningDate + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td colspan="2"  style="font-weight:bold;border:1px solid black">Sample Sent To KTC</td>';
+                                if (DValidation[0].SampleSentToKTC == 1) {
+                                    html += '<td colspan="1" style="border:1px solid black">Yes</td>';
+                                } else {
+                                    html += '<td colspan="1" style="border:1px solid black">No</td>';
+                                }
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td colspan="2"  style="font-weight:bold;border:1px solid black">Date Of Sample Sent</td>';
+                                html += '<td colspan="4" style="border:1px solid black"> ' + DValidation[0].DateOfSampleSent + '</td>';
+                                html += '</tr>';
+                                if (DValidation[0].Reason != '') {
+                                    html += '<tr>';
+                                    html += '<td colspan="2"  style="font-weight:bold;border:1px solid black">REASON (IF NO)</td>';
+                                    html += '<td colspan="4" style="border:1px solid black"> ' + DValidation[0].Reason + '</td>';
+                                    html += '</tr>';
+                                }
+                                html += '</thead>';
+                                html += '<tr>';
+                                html += '<th style="border:1px solid black">Sr. No.</th>';
+                                html += '<th style="border:1px solid black">Details</th>';
+                                html += '<th style="border:1px solid black">Status</th>';
+                                html += '</tr>';
+                                html += '</thead>';
+                                html += '<tbody>';
+                                html += '<tr>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">1</td>';
+                                html += '<td style="font-weight:bold;border:1px solid black">FEEDBACK RECEIVED</td>';
+
+                                html += '<td colspan="2" style="border:1px solid black">' + DValidation[0].FeedBackReceived + '</td>';
+
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td   style="font-weight:bold;border:1px solid black">2</td>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">IMPROVEMENTS REQUIRED</td>';
+                                html += '<td colspan="2" style="border:1px solid black">' + DValidation[0].IMPROVEMENTSREQUIRED + '</td>';
+
+                                html += '</tr>';
+                                html += '<tr">';
+                                html += '<td  style="font-weight:bold;border:1px solid black">3</td>';
+                                html += '<td  style="font-weight:bold;border:1px solid black;">ACTION PLAN</td>';
+
+                                html += '<td colspan="2" style="border:1px solid black">' + DValidation[0].ACTIONPLAN + '</td>';
+
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td style="font-weight:bold;border:1px solid black">4</td>';
+                                html += '<td style="font-weight:bold;border:1px solid black">	TARGET DATE</td>';
+                                if (DValidation[0].TARGETDATE == 1) {
+                                    html += '<td colspan="2" style="border:1px solid black">Yes</td>';
+                                } else {
+                                    html += '<td colspan="2" style="border:1px solid black">' + DValidation[0].TARGETDATE + '</td>';
+                                }
+
+
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">5</td>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">RESPONSIBILITY</td>';
+
+                                html += '<td colspan="2" style="border:1px solid black">' + DValidation[0].RESPONSIBILITY + '</td>';
+
+
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">6</td>';
+                                html += '<td   style="font-weight:bold;border:1px solid black">SAMPLES RESUBMITTED ON</td>';
+
+                                html += '<td colspan="2" style="border:1px solid black">' + DValidation[0].SAMPLESRESUBMITTEDON + '</td>';
+
+
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td   style="font-weight:bold;border:1px solid black">7</td>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">FINAL FEEDBACK</td>';
+
+                                html += '<td colspan="2" style="border:1px solid black">' + DValidation[0].FINALFEEDBACK + '</td>';
+
+
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">8</td>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">REMARKS</td>';
+
+                                html += '<td colspan="2" style="border:1px solid black">' + DValidation[0].REMARKS + '</td>';
+
+
+                                html += '</tr>';
+
+                                html += '</tbody>';
+                                html += '</table><br/>';
+                                html += '</div ><br/>';
+
+                            }
+                            //-------------------------- Quality plan----------------------------
+                            var QPDSList = result.QualityPlanDataSheet;
+                            if (QPDSList.length > 0) {
+                                html += '<div class="span12 table2excel" id="QPDLS"style="text-align:center" data-SheetName="Quality Plan Data Sheet">';
+                                /* html += '<h1><img src="../../img/Karam.png" alt="Logo"> Quality Plan Data Sheet</h1> '*/
+
+                                html += '<table class="table">'
+                                html += '<thead>';
+                                html += '<tr>';
+                                html += '<td colspan="6"><img src="' + result.Url + '/img/karamlogo.png" alt="Logo" style="width:50px;height:50px"></td><td>QF/IPD/06</td>';
+                                html += '</tr><tr><td colspan="12"></td></tr><tr><td colspan="3"></td><td  colspan="9"><h1> Quality Plan Data Sheet</h1></td></tr><tr><td colspan="12"></td></tr><tr><td colspan="12"></td></tr>';
+                                html += '<thead></table> ';
+
+                                html += '<table class="table table table-bordered" style="border:1px solid black">'
+                                html += '<thead>';
+                                /*html += '<tbody>';*/
+                                html += '<tr>';
+                                html += '<td colspan="2" style="font-weight:bold;border:1px solid black">Project No</td>';
+                                html += '<td colspan="2" style="border:1px solid black"> ' + result.ProjectNumber + '</td>';
+                                html += '<td colspan="2"  style="font-weight:bold;border:1px solid black">Date</td>';
+                                html += '<td colspan="2" style="border:1px solid black"> ' + result.OpeningDate + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td colspan="2"  style="font-weight:bold;border:1px solid black">Title</td>';
+                                html += '<td colspan="2" style="border:1px solid black"> ' + result.ProjectTitle + '</td>';
+                                html += '<td colspan="2"  style="font-weight:bold;border:1px solid black">Name Of Quardinator</td>';
+                                html += '<td colspan="2" style="border:1px solid black"> ' + result.Coordinator + '</td>';
+                                html += '</thead>';
+
+                                html += '<tr>';
+                                html += '<th style="border:1px solid black">Sr. No.</th>';
+                                html += '<th style="border:1px solid black">Particulars</th>';
+                                html += '<th style="border:1px solid black">Status</th>';
+                                /* html += '<th style="border:1px solid black">Referece Docments</th>';*/
+                                html += '<th colspan="5" style="border:1px solid black">Remarks</th>';
+                                html += '</tr>';
+                                html += '</thead>';
+                                html += '<tbody>';
+                                html += '<tr>';
+                                html += '<td style="font-weight:bold;border:1px solid black">a</td>';
+                                html += '<td style="font-weight:bold;border:1px solid black">WORK INSTRUCTIONS</td>';
+                                if (QPDSList[0].WORKINSTRUCTIONS_STATUS == true) {
+                                    html += '<td  style="border:1px solid black">Yes</td>';
+                                } else {
+                                    html += '<td  style="border:1px solid black">No</td>';
+                                }
+                                /*  html += '<td style="border:1px solid black">' + QPDSList[0].WORKINSTRUCTIONSDocumentName + '</td>';*/
+                                html += '<td colspan="5"  style="border:1px solid black">' + QPDSList[0].WORKINSTRUCTIONS_REMARKS + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">b</td>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">INSPECTION CRITERION</td>';
+                                if (QPDSList[0].INSPECTIONCRITERION_STATUS == true) {
+                                    html += '<td  style="border:1px solid black">Yes</td>';
+                                } else {
+                                    html += '<td  style="border:1px solid black">No</td>';
+                                }
+                                /* html += '<td  style="border:1px solid black"> ' + QPDSList[0].INSPECTIONCRITERIONDocumentName + '</td>';*/
+                                html += '<td colspan="5"  style="border:1px solid black"> ' + QPDSList[0].INSPECTIONCRITERION_REMARKS + '</td>';
+                                html += '</tr>';
+                                html += '<tr">';
+                                html += '<td  style="font-weight:bold;border:1px solid black">c</td>';
+                                html += '<td  style="font-weight:bold;border:1px solid black;">TESTING PLAN</td>';
+                                if (QPDSList[0].TESTINGPLAN_STATUS == true) {
+                                    html += '<td  style="border:1px solid black">Yes</td>';
+                                } else {
+                                    html += '<td  style="border:1px solid black">No</td>';
+                                }
+                                /*html += '<td  style="border:1px solid black"> ' + QPDSList[0].TESTINGPLANDocumentName + '</td>';*/
+                                html += '<td colspan="5"  style="border:1px solid black"> ' + QPDSList[0].TESTINGPLAN_REMARKS + '</td>';
+                                /*   html += '<td  style="border:1px solid black"> </td>';*/
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td style="font-weight:bold;border:1px solid black">d</td>';
+                                html += '<td style="font-weight:bold;border:1px solid black">Technical Data Sheet</td>';
+                                if (QPDSList[0].TechnicalDataSheet_STATUS == true) {
+                                    html += '<td  style="border:1px solid black">Yes</td>';
+                                } else {
+                                    html += '<td  style="border:1px solid black">No</td>';
+                                }
+                                /*  html += '<td style="border:1px solid black"> ' + QPDSList[0].TechnicalDataSheetDocumentName + '</td>';*/
+                                html += '<td colspan="5" style="border:1px solid black"> ' + QPDSList[0].TechnicalDataSheet_REMARKS + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">e</td>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">Technical Drawings</td>';
+                                if (QPDSList[0].TechnicalDrawings_STATUS == true) {
+                                    html += '<td  style="border:1px solid black">Yes</td>';
+                                } else {
+                                    html += '<td  style="border:1px solid black">No</td>';
+                                }
+                                /* html += '<td  style="border:1px solid black"> ' + QPDSList[0].TechnicalDrawings_DocumentName + '</td>';*/
+                                html += '<td colspan="5"   style="border:1px solid black"> ' + QPDSList[0].TechnicalDrawings_REMARKS + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">f</td>';
+                                html += '<td  style="font-weight:bold;border:1px solid black">Technical File</td>';
+                                if (QPDSList[0].TechnicalFile_STATUS == true) {
+                                    html += '<td  style="border:1px solid black">Yes</td>';
+                                } else {
+                                    html += '<td  style="border:1px solid black">No</td>';
+                                }
+                                /*html += '<td  style="border:1px solid black"> ' + QPDSList[0].TechnicalFile_DocumentName + '</td>';*/
+                                html += '<td colspan="5"  style="border:1px solid black"> ' + QPDSList[0].TechnicalFile_REMARKS + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td style="font-weight:bold;border:1px solid black">g</td>';
+                                html += '<td style="font-weight:bold;border:1px solid black">User Instruction</td>';
+                                if (QPDSList[0].UserInstruction_STATUS == true) {
+                                    html += '<td  style="border:1px solid black">Yes</td>';
+                                } else {
+                                    html += '<td  style="border:1px solid black">No</td>';
+                                }
+                                /* html += '<td style="border:1px solid black"> ' + QPDSList[0].UserInstruction_DocumentName + '</td>';*/
+                                html += '<td colspan="5" style="border:1px solid black"> ' + QPDSList[0].UserInstruction_REMARKS + '</td>';
+                                html += '</tr>';
+                                html += '</tbody>';
+                                html += '</table><br/>';
+                                html += '</div ><br/>';
+
+                            }
+                            //--------------------------Check List For Industrilization-----------------------------
+
+                            var CLFIList = result.CheckList;
+                            if (CLFIList.length > 0) {
+                                html += '<div class="span12 table2excel" id="CLFI"style="text-align:center" data-SheetName="Check List For Industrilization">';
+                                /* html += '<h1>Check List For Industrilization</h1> '*/
+
+                                html += '<table class="table">'
+                                html += '<thead>';
+                                html += '<tr>';
+                                html += '<td colspan="10"><img src="' + result.Url + '/img/karamlogo.png" alt="Logo" style="width:50px;height:50px"></td><td>QF/IPD/08</td>';
+                                html += '</tr><tr><td colspan="12"></td></tr><tr><td colspan="4"></td><td  colspan="9"><h1> Check List For Industrilization</h1></td></tr><tr><td colspan="12"></td></tr><tr><td colspan="12"></td></tr>';
+                                html += '<thead></table> ';
+
+                                html += '<table class="table table table-bordered" style="border:1px solid black">'
+                                html += '<thead></thead>';
+                                html += '<tbody>';
+                                html += '<td colspan="3"  style="font-weight:bold;border:1px solid black">Project No</td>';
+                                html += '<td colspan="5" style="border:1px solid black"> ' + result.ProjectNumber + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td colspan="3" style="font-weight:bold;border:1px solid black">Product Category</td>';
+                                html += '<td colspan="5" style="border:1px solid black"> ' + CLFIList[0].ProductCategory + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td colspan="3" style="font-weight:bold;border:1px solid black">Item Picture</td>';
+                                html += '<td colspan="5" style="border:1px solid black"> ' + CLFIList[0].ItemPicture + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td colspan="3" style="font-weight:bold;border:1px solid black">Product Category</td>';
+                                html += '<td colspan="5" style="border:1px solid black"> ' + CLFIList[0].ProductCategory + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td colspan="3" style="font-weight:bold;border:1px solid black">TDS</td>';
+                                html += '<td colspan="5" style="border:1px solid black"> ' + CLFIList[0].TDS + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td colspan="3" style="font-weight:bold;border:1px solid black">Manual Instruction</td>';
+                                html += '<td colspan="5" style="border:1px solid black"> ' + CLFIList[0].ManualInstruction + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td colspan="3" style="font-weight:bold;border:1px solid black">Certification</td>';
+                                html += '<td colspan="5" style="border:1px solid black"> ' + CLFIList[0].Certification + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td colspan="3" style="font-weight:bold;border:1px solid black">Item Code</td>';
+                                html += '<td colspan="5" style="border:1px solid black"> ' + CLFIList[0].ItemCode + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td colspan="3" style="font-weight:bold;border:1px solid black">Applicable Standard</td>';
+                                html += '<td colspan="5" style="border:1px solid black"> ' + CLFIList[0].ApplicableStandard + '</td>';
+                                html += '</tr>';
+                                html += '<tr>'; 
+                                html += '<td colspan="3" style="font-weight:bold;border:1px solid black">Customer Name</td>';
+                                html += '<td colspan="5" style="border:1px solid black"> ' + CLFIList[0].CustomerName + '</td>';
+                                html += '</tr>'; 
+                                 html += '<tr>';
+                                html += '<td colspan="3" style="font-weight:bold;border:1px solid black">BOM Creation Status in ERP</td>';
+                                html += '<td colspan="5" style="border:1px solid black"> ' + CLFIList[0].BOMCreationStatus + '</td>';
+                                html += '</tr>'; 
+                                 html += '<tr>';
+                                html += '<td colspan="3" style="font-weight:bold;border:1px solid black">Safety Stock Creation Status in ERP</td>';
+                                html += '<td colspan="5" style="border:1px solid black"> ' + CLFIList[0].SafetyStockCreationStatus + '</td>';
+                                html += '</tr>'; 
+                                 html += '<tr>';
+                                html += '<td colspan="3" style="font-weight:bold;border:1px solid black">Sample</td>';
+                                html += '<td colspan="5" style="border:1px solid black"> ' + CLFIList[0].Sample + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                              
+                                html += '<td colspan="3" style="font-weight:bold;border:1px solid black">Packaging</td>';
+                                html += '<td colspan="5" style="border:1px solid black"> ' + CLFIList[0].Packaging + '</td>';
+                                html += '</tr>';
+                               
+                                 html += '<tr>';
+                                html += '<td colspan="3" style="font-weight:bold;border:1px solid black">Work Instructions</td>';
+                                html += '<td colspan="5" style="border:1px solid black"> ' + CLFIList[0].WorkInstructions + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td colspan="3" style="font-weight:bold;border:1px solid black">Inspection Criterion</td>';
+                                html += '<td colspan="5" style="border:1px solid black"> ' + CLFIList[0].InspectionCriterion + '</td>';
+                                html += '</tr>';
+                                html += '<tr>';
+                                html += '<td colspan="3" style="font-weight:bold;border:1px solid black">INDUSTRIALISATIONDATE</td>';
+                                html += '<td colspan="5" style="border:1px solid black"> ' + CLFIList[0].INDUSTRIALISATIONDATE + '</td>';
+                                html += '</tr>';
+                               
+
+                                //html += '<td colspan="3" style="font-weight:bold;border:1px solid black">ADDITIONAL MACHINES REQUIRED</td>';
+                                //html += '<td colspan="5" style="border:1px solid black"> ' + CLFIList[0].ADDITIONALMACHINESREQUIRED + '</td>';
+                                //html += '</tr>';
+                                //html += '<tr>';
+                                //html += '<td colspan="3" style="font-weight:bold;border:1px solid black">JIG/FIXTURES/TOOLS NEW MODIFICATION IN OLD</td>';
+                                //html += '<td colspan="5" style="border:1px solid black"> ' + CLFIList[0].JIG_FIXTURES_TOOLSNew + '</td>';
+                                //html += '</tr>';
+                                //html += '<tr>';
+                                //html += '<td colspan="3" style="font-weight:bold;border:1px solid black">MODIFICATION IN OLD</td>';
+                                //html += '<td colspan="5" style="border:1px solid black"> ' + CLFIList[0].MODIFICATIONINOLD + '</td>';
+                                //html += '</tr>';
+                                //html += '<tr>';
+                                //html += '<td colspan="3" style="font-weight:bold;border:1px solid black">ADDITIONAL TEST EQUIPMENT REQUIRED</td>';
+                                //html += '<td colspan="5" style="border:1px solid black"> ' + CLFIList[0].ADDITIONALTESTEQUIPMENTREQUIRED + '</td>';
+                                //html += '</tr>';
+                                //html += '<tr>';
+                                //html += '<td colspan="3" style="font-weight:bold;border:1px solid black">CHANGE IN ISO DOCUMENT (IF ANY)</td>';
+                                //html += '<td colspan="5" style="border:1px solid black"> ' + CLFIList[0].CHANGEINISODOCUMENT + '</td>';
+                                //html += '</tr>';
+                                //html += '<tr>';
+                                //html += '<td colspan="3" style="font-weight:bold;border:1px solid black">UPDATION IN ERP SYSTEMS (IF ANY)</td>';
+                                //html += '<td colspan="5" style="border:1px solid black"> ' + CLFIList[0].UPDATIONINERPSYSTEMS + '</td>';
+                                //html += '</tr>';
+                                //html += '<tr>';
+                                //html += '<td colspan="3" style="font-weight:bold;border:1px solid black">PLANNING OF COMPONENT DEVELOPMENT</td>';
+                                //html += '<td colspan="5" style="border:1px solid black"> ' + CLFIList[0].PLANNINGOFCOMPONENTDEVELOPMENT + '</td>';
+                                //html += '</tr>';
+                                //html += '<tr>';
+                                //html += '<td colspan="3" style="font-weight:bold;border:1px solid black">QUALITY PLAN</td>';
+                                //html += '<td colspan="5" style="border:1px solid black"> ' + CLFIList[0].QUALITYPLAN + '</td>';
+                                //html += '</tr>';
+                                //html += '<tr>';
+                                //html += '<thead>';
+                                //html += '<tr>';
+                                //html += '<th style="border:1px solid black">DRG.NO.</th>';
+                                //html += '<th style="border:1px solid black">TITLE</th>';
+                                //html += '<th style="border:1px solid black">QTY.</th>';
+                                //html += '<th style="border:1px solid black">STATUS</th>';
+                                //html += '<th style="border:1px solid black">IN HOUSE</th>';
+                                //html += '<th style="border:1px solid black">OUTSIDE</th>';
+                                //html += '<th colspan="2"  style="border:1px solid black">TOOLING STATUS (IF REQUIRED)</th>';
+                                //html += '</tr>';
+                                //html += '</thead >';
+                                //html += '<tbody>';
+                                //var CLFIComponentList = result.CheckList[0].checkListComponent;
+
+                                //for (var i = 0; i < CLFIComponentList.length; i++) {
+
+                                //    var data = CLFIComponentList[i];
+                                //    html += '<tr>';
+                                //    html += '<td style="border:1px solid black"> ' + data.DRGNO + '</td>';
+                                //    html += '<td style="border:1px solid black"> ' + data.Title + '</td>';
+                                //    html += '<td style="border:1px solid black"> ' + data.Quantity + '</td>';
+                                //    html += '<td style="border:1px solid black"> ' + data.COMPONENTSStatus + '</td>';
+                                //    html += '<td style="border:1px solid black"> ' + data.InHouse + '</td>';
+                                //    html += '<td style="border:1px solid black"> ' + data.Outside + '</td>';
+                                //    html += '<td colspan="2"  style="border:1px solid black"> ' + data.ToolingStatus + '</td>';
+                                //    html += '</tr>';
+                                //}
+                                //html += '</tbody>';
+                                html += '</table >';
+                                html += '</div ><br/>';
+
+                            }
+                        } else {
+                            html += '<div class="text-center"><span>No data found.</span></div>';
+                        }
+                        $("#partialDiv").append(html + '<br>');
+                        Idname = '';
+
+                        $("#partialDiv").each(function () {
+
+                            var images = $(this).find(".table2excel");
+
+                            for (var m = 0; m < images.length; m++) {
+                                if (m == images.length) {
+                                    Idname += '#' + images[m].id;
+                                } else {
+                                    Idname += '#' + images[m].id + ',';
+                                }
+
+                                var dd = images[m].id;
+
+                                var txt = dd;
+
+                            }
+                            Idname = Idname.replace(/,\s*$/, "");
+                            if (images.length > 0) {
+                                tablesToExcel(Idname, 'PPRSheet.xls');
+                            }
+                        });
+
+                    },
+                error:
+                    function (response) {
+
+                        alert("Error: " + response);
+                    }
+            });
+    }
+
+    function Search_List() {
+        debugger
+        $.ajax(
+            {
+                type: 'Get',
+                url: '/ProductProjectReport/Search_List?Status=' + $("#SearchbyStatus").val() + '&No=' + encodeURIComponent($("#SearchbyProjectNo").val()) + '&Date=' + $("#txtSearchbyDate").val() + '&ApprovalStatus=' + $("#Status").val(),
+                beforeSend: function () {
+                    $('.page-loader-wrapper').show();
+                },
+                complete: function () {
+                    $('.page-loader-wrapper').hide();
+                },
+                success:
+                    function (response) {
+                        $("#partial_div").html(response);
+                    }
+            })
+    }
+</script>
+
+@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>*@
+<script type="text/javascript">
+    var tablesToExcel = (function ($) {
+        var uri = 'data:application/vnd.ms-excel;base64,'
+            , html_start = `<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">`
+            , template_ExcelWorksheet = `<x:ExcelWorksheet><x:Name>{SheetName}</x:Name><x:WorksheetSource HRef="sheet{SheetIndex}.htm"/></x:ExcelWorksheet>`
+            , template_ListWorksheet = `<o:File HRef="sheet{SheetIndex}.htm"/>`
+            , template_HTMLWorksheet = `
+------=_NextPart_dummy
+Content-Location: sheet{SheetIndex}.htm
+Content-Type: text/html; charset=windows-1252
+
+` + html_start + `
+<head>
+            <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+            <link id="Main-File" rel="Main-File" href="../WorkBook.htm">
+            <link rel="File-List" href="filelist.xml">
+</head>
+<body><table>{SheetContent}</table></body>
+</html>`
+            , template_WorkBook = `MIME-Version: 1.0
+X-Document-Type: Workbook
+Content-Type: multipart/related; boundary="----=_NextPart_dummy"
+
+------=_NextPart_dummy
+Content-Location: WorkBook.htm
+Content-Type: text/html; charset=windows-1252
+
+` + html_start + `
+<head>
+<meta name="Excel Workbook Frameset">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<link rel="File-List" href="filelist.xml">
+<!--[if gte mso 9]><xml>
+         <x:ExcelWorkbook>
+            <x:ExcelWorksheets>{ExcelWorksheets}</x:ExcelWorksheets>
+            <x:ActiveSheet>0</x:ActiveSheet>
+         </x:ExcelWorkbook>
+</xml><![endif]-->
+</head>
+<frameset>
+            <frame src="sheet0.htm" name="frSheet">
+            <noframes><body><p>This page uses frames, but your browser does not support them.</p></body></noframes>
+</frameset>
+</html>
+{HTMLWorksheets}
+Content-Location: filelist.xml
+Content-Type: text/xml; charset="utf-8"
+
+<xml xmlns:o="urn:schemas-microsoft-com:office:office">
+            <o:MainFile HRef="../WorkBook.htm"/>
+            {ListWorksheets}
+            <o:File HRef="filelist.xml"/>
+</xml>
+------=_NextPart_dummy--
+`
+            , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+            , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+        return function (tables, filename) {
+            var context_WorkBook = {
+                ExcelWorksheets: ''
+                , HTMLWorksheets: ''
+                , ListWorksheets: ''
+            };
+            var tables = jQuery(tables);
+
+            $.each(tables, function (SheetIndex) {
+                var $table = $(this);
+                var SheetName = $table.attr('data-SheetName');
+                if ($.trim(SheetName) === '') {
+                    SheetName = 'Sheet' + SheetIndex;
+                    SheetName = $(this).id;
+                }
+                context_WorkBook.ExcelWorksheets += format(template_ExcelWorksheet, {
+                    SheetIndex: SheetIndex
+                    , SheetName: SheetName
+                });
+                context_WorkBook.HTMLWorksheets += format(template_HTMLWorksheet, {
+                    SheetIndex: SheetIndex
+                    , SheetContent: $table.html()
+                });
+                context_WorkBook.ListWorksheets += format(template_ListWorksheet, {
+                    SheetIndex: SheetIndex
+                });
+            });
+
+            var link = document.createElement("A");
+            link.href = uri + base64(format(template_WorkBook, context_WorkBook));
+            link.download = filename || 'Workbook.xls';
+            link.target = '_blank';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    })(jQuery);
+
+</script>
+@*<script src="~/Content/js/select2.min.js"></script>*@
+
+<script>
+    $(document).ready(function () {
+        $('#txtSearchbyDate').val('@DateTime.Now.ToString("dd-MM-yyyy")');
+        Search_List();
+    })
+</script>

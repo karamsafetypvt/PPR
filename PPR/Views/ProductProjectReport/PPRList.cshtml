@@ -1,0 +1,134 @@
+﻿@using PPRModel.Model
+@model ProductProjectReportModel
+@{
+    ViewBag.Title = "Product Project Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int i = 0;
+}
+<style>
+    .tblrespoonsive {
+        overflow-x: auto;
+    }
+</style>
+<link href="~/Content/css/sweetalert.css" rel="stylesheet" />
+<link href="~/Content/css/select2.css" rel="stylesheet" />
+<div id="content">
+    <div id="content-header">
+        <div id="breadcrumb"> <a href="~/DashBoard/Index" class="tip-bottom"><i class="icon-home"></i> Home</a> <a href="Javascript:void(0)" class="current">Project Master</a> </div>
+        <h1>Project Master</h1>
+    </div>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span12">
+                @*<div>
+                        <a href="@Url.Action("Create", "ProductProjectReport")" class="btn btn-primary">Add New Project</a>
+                    </div>*@
+                <div class="widget-box">
+                    <div class="widget-title">
+                        <span class="icon"><i class="icon-th"></i></span>
+                        <h5>Project List</h5>
+                    </div>
+
+                    <div class="widget-content nopadding tblrespoonsive">
+                        <table class="table table-bordered data-table">
+                            <thead>
+                                <tr>
+                                    <th>Sr. No.</th>
+                                    <th style="display:none">ID</th>
+                                    <th>Project Title</th>
+                                    <th>Project No</th>
+                                    <th>Coordinator</th>
+                                    <th>Product Category</th>
+                                    <th>Product Ref. No.</th>
+                                    @*<th>Company Name</th>*@
+                                    <th>Product Description</th>
+                                    <th>Opening Date</th>
+                                    <th>Closing Date</th>
+                                    <th>Created Date</th>
+                                    <th>Created By</th>
+                                    <th>Updated Date</th>
+                                    <th>Updated By</th>
+                                    <th>Status</th>
+                                        <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var data in Model._ProductProjectReportList)
+                                {
+                                    <tr class="gradeX">
+                                        <td>@(++i)</td>
+                                        <td style="display:none">@data.ProjectID</td>
+                                        <td>
+                                            @data.ProjectTitle
+                                        </td>
+                                        <td>
+                                            @data.ProjectID
+                                        </td>
+                                        @*<td><a href="/DesignDevelopmetPlan/DevelopmentPlan?ProjectID=@data.ProjectID" style="text-decoration:underline; color:#666674;"> @data.ProjectNO</a></td>*@
+                                        <td>@data.Coordinator</td>
+                                        <td>@data.ProductCategory</td>
+                                        <td>@data.ProductRefNo</td>
+                                        <td>@data.ProductDescription</td>
+                                        <td>@data.OpeningDate</td>
+                                        <td>@data.ClosingDate</td>
+                                        <td>@data.CreatedDate.ToString("dd/MM/yyyy hh:mm tt")</td>
+                                        <td>@data.CreatedBy</td>
+                                        <td>@data.UpdatedDate.ToString("dd/MM/yyyy hh:mm tt")</td>
+                                        <td>@data.UpdatedBy</td>
+                                        <td style="text-align: center;"><span class="badge badge-success">@data.Status</span></td>
+                                        <td><a href="@Url.Action("AddDevelopmentSheetImprovisation", "ProductProjectReport", new { ProjectID = @data.ProjectID })" class="btn btn-primary" title="Add"><span class="fa fa-angle-double-right"></span></a></td>
+                                        
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<script src="~/Content/js/sweetalert-dev.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('select').select2();
+    })
+    function Confirm(title, event) {
+        var clientid = event.id;
+        var href = $('#' + clientid).attr('href');
+        var returnType = false;
+
+        swal({
+            title: "Warning",//"Are you sure?",
+            text: title,
+            //text: "You will not be able to recover this imaginary file!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        },
+            function (isConfirm, id) {
+                if (isConfirm) {
+                    window.location.href = href;
+                    returnType = true;
+                    //swal("Deleted!", "Record has been deleted.", "success");
+                } else {
+                    //$('div').click();
+                    $('#' + clientid).blur();
+                    returnType = false;
+                }
+            }
+        );
+        return returnType;
+    }
+</script>
+<script src="~/Content/js/select2.min.js"></script>
+

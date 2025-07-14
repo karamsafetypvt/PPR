@@ -1,0 +1,222 @@
+﻿
+@using PPRModel.Model
+@model DesignDataSheetModel
+<style>
+    .form-horizontal .controls {
+        margin-left: 544px;
+        padding: 10px 0;
+    }
+
+    .form-horizontal .control-label {
+        padding-top: 15px;
+        width: auto;
+        padding-left: 30px;
+    }
+
+    .control-label {
+        font-weight: bold
+    }
+</style>
+<link href="~/Content/css/uniform.css" rel="stylesheet" />
+<div class="row-fluid">
+    <div class="span12">
+        <div class="widget-box">
+            <div class="widget-title">
+                <span class="icon"> <i class="icon-align-justify"></i> </span>
+                <h5>Design Input Data Sheet</h5>
+            </div>
+            <div class="widget-content nopadding">
+                @*<form action="#" method="get" class="form-horizontal">*@
+                @using (Html.BeginForm("SaveDesignInputDataSheet", "DesignDevelopmetPlan", FormMethod.Post, new { id = "form_validation", @class = "form-horizontal" }))
+                {
+                    <div class="control-group">
+                        <label class="control-label">PROJECT NO :</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.ProjectNO, new { @Class = "from-control span11", @disabled = true })
+                            @Html.HiddenFor(m => m.ProjectID, new { @Class = "from-control span11" })
+                            @Html.HiddenFor(m => m.PlanID, new { @Class = "from-control span11" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">PROJECT TITLE :</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.ProjectTitle, new { @Class = "from-control span11", @disabled = true })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">NAME OF THE CO – ORDINATOR : </label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.Coordinator, new { @Class = "from-control span11", @disabled = true })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">REFERENCE STANDARDS :</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.ProductRefNo, new { @Class = "from-control span11", @disabled = true })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">FUNCTIONAL & PERFORMANCE REQUIREMENT :</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.ProjectNO, new { @Class = "from-control span11", @disabled = true })
+                        </div>
+                    </div>
+                    <div class="control-group" style="background: #d0d0d1;">
+                        <label class="control-label">SPECIFICATIONS ( Testing Requirement ) </label>
+
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">(a) Static Strength</label>
+                        <div class="controls">
+                            <label>
+                                @Html.DropDownListFor(m => m.Static_Unit, Model._UnitList, new { @id = "required", @style = "width: 100px;" })
+                                @Html.TextBoxFor(m => m.StaticStrength, new { @Class = "from-control span4 req1", @onkeypress = "return isNumberKey(event,this)" })
+                            </label>
+                            @Html.ValidationMessageFor(m => m.StaticStrength, "", new { @class = "m-form__help" })
+                        </div>
+                        <label class="control-label">(b) Dynamic Strength</label>
+                        <div class="controls">
+                            <label>
+                                @Html.DropDownListFor(m => m.Dyanmic_Unit, Model._UnitList, new { @id = "required", @style = "width: 100px;" })
+                                @Html.TextBoxFor(m => m.DynamicStrength, new { @Class = "from-control span4 req2", @onkeypress = "return isNumberKey(event,this)" })
+                            </label>
+                            @Html.ValidationMessageFor(m => m.DynamicStrength, "", new { @class = "m-form__help" })
+                        </div>
+                        <label class="control-label">(c) Corrosion Resistance</label>
+                        <div class="controls">
+                            <label>
+                                @Html.DropDownListFor(m => m.Corrosion_Unit, Model._UnitList, new { @id = "required", @style = "width: 100px;" })
+                                @Html.TextBoxFor(m => m.corrosionResistance, new { @Class = "from-control span4 req3", @onkeypress = "return isNumberKey(event,this)" })
+                            </label>
+                            @Html.ValidationMessageFor(m => m.corrosionResistance, "", new { @class = "m-form__help" })
+                        </div>
+                        <label class="control-label">(d) Other</label>
+                        <div class="controls">
+                            <label>
+                                @Html.DropDownListFor(m => m.Other_Unit, Model._UnitList, new { @id = "required", @style = "width: 100px;" })
+                                @Html.TextBoxFor(m => m.Other, new { @Class = "from-control span4 req4", @onkeypress = "return isNumberKey(event,this)" })
+                            </label>
+                            @Html.ValidationMessageFor(m => m.Other, "", new { @class = "m-form__help" })
+                        </div>
+                    </div>
+                    <div class="control-group" style="background: #d0d0d1;">
+                        <label class="control-label">CONSTRUCTIONAL & SAFETY REQUIREMENTS </label>
+                        <div class="controls">
+
+                        </div>
+
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">(a) Material Specific</label>
+                        <div class="controls">
+                            @Html.DropDownListFor(m => m.MaterialSpecific_Unit, Model._UnitList, new { @id = "required", @style = "width: 100px;" })
+                            @Html.TextBoxFor(m => m.MaterialSpecific, new { @Class = "from-control span4 req5", @onkeypress = "return isNumberKey(event,this)" })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.MaterialSpecific, "", new { @class = "m-form__help" })
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">(b) Process Specific</label>
+                        <div class="controls">
+                            @Html.DropDownListFor(m => m.ProcessSpecific_Unit, Model._UnitList, new { @id = "required", @style = "width: 100px;" })
+                            @Html.TextBoxFor(m => m.ProcessSpecific, new { @Class = "from-control span4 req6", @onkeypress = "return isNumberKey(event,this)" })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.ProcessSpecific, "", new { @class = "m-form__help" })
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">STATUTORY & REGULATORY REQUIREMENTS ( If Any )</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.Statutory_Regulatory_Requirement, new { @Class = "from-control span11" })
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">SPECIAL ENVIRONMENT CONDITIONS (If Required)</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.SPECIAL_ENVIRONMENT_CONDITIONS, new { @Class = "from-control span11" })
+                        </div>
+                    </div>
+
+                    <div class="control-group" style="background: #d0d0d1;">
+                        <label class="control-label">OUTER DESIGN INPUTS </label>
+                        <div class="controls">
+
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label"> (a) Packaging</label>
+                        <div class="controls">
+                            @Html.DropDownListFor(m => m.Packaging_Unit, Model._UnitList, new { @id = "required", @style = "width: 100px;" })
+                            @Html.TextBoxFor(m => m.Packaging, new { @Class = "from-control span4 req7", @onkeypress = "return isNumberKey(event,this)" })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.Packaging, "", new { @class = "m-form__help" })
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">(b) Sticker & Labels</label>
+                        <div class="controls">
+                            @Html.DropDownListFor(m => m.StickerLabels_Unit, Model._UnitList, new { @id = "required", @style = "width: 100px;" })
+                            @Html.TextBoxFor(m => m.StickerLabels, new { @Class = "from-control span4 req8", @onkeypress = "return isNumberKey(event,this)" })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.StickerLabels, "", new { @class = "m-form__help" })
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label"> (c) User Instruction</label>
+                        <div class="controls">
+                            @Html.DropDownListFor(m => m.UserInstruction_Unit, Model._UnitList, new { @id = "required", @style = "width: 100px;" })
+                            @Html.TextBoxFor(m => m.UserInstruction, new { @Class = "from-control span4 req9", @onkeypress = "return isNumberKey(event,this)" })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.UserInstruction, "", new { @class = "m-form__help" })
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">INFORMATION FROM EARLIER PROJECTS (IF ANY)</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.INFORMATION_EARLIER_PROJECTS, new { @Class = "from-control span11" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">
+                            NEED OF INVOLVEMENT OF CUSTOMER IN DEVELOPMENT (IF REQUIRED)
+                        </label>
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.CUSTOMER_IN_DEVELOPMENT, new { @Class = "from-control span11" })
+                        </div>
+                    </div><table class="table">
+                        <tr>
+                            <td>
+                                <label class="control-label text-center">
+                                    Checked By
+                                    <br />
+                                    Principal Lead (R&D)
+                                </label>
+                            </td>
+                            <td>
+                                <label class="control-label text-center">
+                                    Reviewd By<br />
+                                    Chief Lead(R&D)
+                                </label>
+                            </td>
+                            <td>
+                                <label class="control-label text-center">
+                                    Approved By<br />
+                                    HOD (R&D)
+                                </label>
+                            </td>
+                        </tr>
+                    </table>
+                    if (Model.PPR_Status != "3")
+                    {
+                        <div class="form-actions" style="text-align: center;padding-left:0px">
+                            <a href="~/DesignDevelopmetPlan/DevelopmentPlan?ProjectID=@Model.ProjectID" class="btn btn-danger">Cancel</a>
+                            <button type="submit" class="btn btn-success" id="btnSave">Save</button>
+                        </div>
+                    }
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Content/js/jquery.uniform.js"></script>
+<script src="~/Scripts/jquery-ui.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/CustomJS/Utility.js"></script>
